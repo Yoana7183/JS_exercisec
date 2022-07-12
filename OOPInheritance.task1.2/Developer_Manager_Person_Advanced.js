@@ -2,15 +2,18 @@ function Person(name, age) {
     this.name = name;
     this.age = age;
 }
+Manager.prototype = Object.create(Person.prototype)
 
 function Manager(name, age, managed) {
-    Person.apply(this, [name, age]);
-    this.managed = managed.forEach(element => {
-         managed = element.name
-         console.log(managed);
-         console.log(element.name);
-    });
+    this.managed = Person.call(this);
+    this.name = name,
+        this.age = age,
+        this.managed = managed[0].name
+
+    return this.managed;
 }
+
+
 
 function Developer(name, age, skillset) {
     Person.call(this, name, age)
