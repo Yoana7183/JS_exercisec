@@ -19,18 +19,13 @@ const todos = [
 const todoID = 2;
 
 /* ----------------------------- YOUR CODE HERE ----------------------------- */
-let mapTheSameObj = todos.map((a)=>{return a})
+const newTodos = JSON.parse(JSON.stringify(todos))
 
-let filterById = mapTheSameObj.filter((e)=>
-{if(e.id == todoID && e.completed ==false){
-return e.completed.set(true);
-
-}else{return mapTheSameObj}})
+  newTodos.filter((e)=>{e.id == todoID && e.completed ==false; return e.completed = true})
 
 /* ---------------------------------- TEST ---------------------------------- */
 console.log(`Original todos:`, todos);
-console.log(`New todos:`, filterById);
-
+console.log(`New todos:`, newTodos);
 
 /* ----------------------------- EXPECTED OUTPUT ---------------------------- */
 // Original todos: [
