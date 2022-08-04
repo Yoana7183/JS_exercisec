@@ -17,7 +17,7 @@
 
 
 li{
-    color: rgb(238, 104, 144);
+    color: black
 }
 
 
@@ -33,4 +33,7 @@ li{
   }
   #completeTodo{
     width: 50px;
+  }
+  #comp{
+    background-color: rgb(197, 228, 218);
   }
