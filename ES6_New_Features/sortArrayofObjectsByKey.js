@@ -37,13 +37,24 @@ const todos = [
 
 /* -------------------------- YOUR CODE STARTS HERE ------------------------- */
 
+
 function sortArrayByKey(arr) {
 
-}
-/* --------------------------- YOUR CODE ENDS HERE -------------------------- */
+    arr.sort(function(a, b) {
+        return parseFloat(a.priority) - parseFloat(b.priority);
+    });
 
+}
+
+
+  
+
+
+
+
+/* --------------------------- YOUR CODE ENDS HERE -------------------------- */
 // TEST CASE (do not modify):
-console.log(sortArrayByKey(todos, 'priority'))
+console.log(sortArrayByKey(secondTodos, 'priority'))
 
 // EXPECTED OUTPUT:
 // [

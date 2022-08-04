@@ -1,5 +1,38 @@
-#addButtonDinamicly{
-    width: 1rem;
-    height: 1rem;
 
+.inputDiv{
+    margin-left: 4vw;
 }
+.displayed{
+    margin-left: 100px;
+}
+#displayTodos{
+  
+    width: 14vw;
+    height: 40px;
+    margin-left: 100px;
+    margin-top: 20px;
+    list-style-type: none;
+ 
+}
+
+
+li{
+    color: rgb(238, 104, 144);
+}
+
+button{
+  
+}
+#todos{
+   
+    width: 30%;
+    list-style: none;
+    
+}
+
+  #deleteTodo{
+    width: 50px;
+  }
+  #completeTodo{
+    width: 50px;
+  }
