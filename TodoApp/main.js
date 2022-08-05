@@ -42,20 +42,21 @@ const completeTodo = () => {
 
 document.getElementById('addTodos').addEventListener("click", addTodo);
 
-
 function displayTodos() {
 
     var todos = "";
 
     todoArr.map((todo, i) => {
         if (todo.isDone) {
-            todos = todos + ` <li style="text-decoration: line-through" id="comp" idx="${i}">${todo.todo}</div> <button id="deleteTodo"type="button" onclick="deleteTodo()">Delete</button>
+            todos = todos + ` <li style="text-decoration: line-through" id="comp" idx="${i}"> ${i+1 }. ${todo.todo}</div> <button id="deleteTodo"type="button" onclick="deleteTodo()">Delete</button>
             <button id="completeTodo"type="button" onclick="completeTodo()">Undone</button></li>`;
         } else {
-            todos = todos + `<li id="comp" idx="${i}">${todo.todo}</div> <button id="deleteTodo"type="button" onclick="deleteTodo()">Delete</button>
+            todos = todos + `<li id="comp" idx="${i}">  ${i+1 }. ${todo.todo}</div> <button id="deleteTodo"type="button" onclick="deleteTodo()">Delete</button>
             <button id="completeTodo"type="button" onclick="completeTodo()">Done</button></li>`;
         }
     });
 
     document.getElementById("displayTodos").innerHTML = todos;
+    document.getElementById("arrSize").innerHTML = todoArr.length;
+  
 }
