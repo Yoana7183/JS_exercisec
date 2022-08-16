@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SeparateTwoArray</title>
+</head>
+
+<body>
+
+
+
+    <script>
+
+
+        // TASK: Given the array: numbersArr bellow, write the code (using a for loop) which will create two new arrays:
+        // evenNums - which elements will be the positive even numbers from numbersArr.
+        // oddNums - which elements will be the negative odd numbers from numbersArr.
+
+        // Note that the Zero is neither positive nor negative number!
+
+        // HINT: you can push a value in a array by using array.push(value) method. 
+
+        var numbersArr = [1, 6, -3, 5, 2, -8, 0, 4, 3, -7, -11];
+        var evenNums = [];
+        var oddNums = [];
+
+
+        for (i = 0; i < numbersArr.length; i++) {
+            console.log(numbersArr[i])
+            var num = numbersArr[i];
+
+
+            if ((num < 0) && (num % 2 !== 0)) {
+                document.writeln('</br>' + 'negative odd elements in an array: ' + num + '</br>' + oddNums.length);
+                oddNums.push(num);
+                // console.log(oddNums);
+
+            } else if ((num > 0) && (num % 2 == 0)) {
+                document.writeln('</br>' + 'positive even elements in an array: ' + num + '</br>' + evenNums.length);
+                evenNums.push(num);
+                // console.log(evenNums);
+
+            }
+        };
+
+
+
+
+    </script>
+</body>
+
+</html>
