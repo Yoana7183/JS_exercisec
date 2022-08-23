@@ -1,9 +1,8 @@
-
 const imageContainer = document.querySelector('.containImg');
 const image_urls = {
-    './img/Bohemian-Rhapsody.jpg': '/songsLyrics_FetchApi/lyrics/Bohemian-Rhapsody.txt',
-    './img/show_must_go_on.jpg': '/songsLyrics_FetchApi/lyrics/show_must_go_on.txt',
-    './img/we_will_rock_you.jpg': '/songsLyrics_FetchApi/lyrics/we_will_rock_you.txt'
+    './img/Bohemian-Rhapsody.jpg': './lyrics/Bohemian-Rhapsody.txt',
+    './img/show_must_go_on.jpg': './lyrics/show_must_go_on.txt',
+    './img/we_will_rock_you.jpg': './lyrics/we_will_rock_you.txt'
 }
 
 for (const key in image_urls) {
