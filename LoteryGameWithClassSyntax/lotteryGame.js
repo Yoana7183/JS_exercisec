@@ -93,38 +93,51 @@ class Winner {
     defineTheProfit() {
 
         let winningCombination = this.checkForWinningCombinationsOfNumbers()
-        if (winningCombination.length === 2) {
-            console.log(`${this.player.name} is having 2 winning numbers : " ${winningCombination}" and WON 50 BGN`)
-        } if (winningCombination.length === 3) {
-            console.log(`${this.player.name} is having 3 winning numbers : " ${winningCombination}" and WON 500 BGN`)
-        }
-        if (this.lotary.lotaryGame.length === 5) {
-            if (winningCombination.length === 4) {
-                console.log(`${this.player.name} is having 2 winning numbers : " ${winningCombination}" and WON 50 000 BGN`)
+        if (this.lotary.lotaryGame.length) {
+            switch (winningCombination.length) {
+                case 2:
+                    console.log(`${this.player.name} is having 2 winning numbers : " ${winningCombination}" and WON 50 BGN`)
+                    break;
+
+                case 3:
+                    console.log(`${this.player.name} is having 3 winning numbers : " ${winningCombination}" and WON 500 BGN`)
+                    break;
+                default: console.log(`${this.player.name} you guess only one number or none at all.`);
             }
-            if (winningCombination.length === 5) {
-                console.log(`${this.player.name} is having 2 winning numbers : " ${winningCombination}" and WON JACKPOT 5 000 000 BGN`)
+        }
+
+        if (this.lotary.lotaryGame.length === 5) {
+            switch (winningCombination) {
+                case 4:
+                    console.log(`${this.player.name} is having 4 winning numbers : " ${winningCombination}" and WON 50 000 BGN`)
+                    break;
+
+                case 5:
+                    console.log(`${this.player.name} is having 5 winning numbers : " ${winningCombination}" and WON JACKPOT 5 000 000 BGN`)
+                    break;
+
             }
         }
 
         if (this.lotary.lotaryGame.length === 6) {
-            if (winningCombination.length === 4) {
-                console.log(`${this.player.name} is having 4 winning numbers : " ${winningCombination}" and WON 5 000 BGN`)
-            }
-            if (winningCombination.length === 5) {
-                console.log(`${this.player.name} is having 5 winning numbers : " ${winningCombination}" and WON 50 000 BGN`)
-            }
-            if (winningCombination.length === 6) {
-                console.log(`${this.player.name} is having 6 winning numbers : " ${winningCombination}" and WON JACKPOT 5 000 000 BGN`)
+            switch (winningCombination) {
+                case 4:
+                    console.log(`${this.player.name} is having 4 winning numbers : " ${winningCombination}" and WON 5 000 BGN`)
+                    break;
+
+                case 5:
+                    console.log(`${this.player.name} is having 5 winning numbers : " ${winningCombination}" and WON 50 000 BGN`)
+                    break;
+
+                case 6:
+                    console.log(`${this.player.name} is having 6 winning numbers : " ${winningCombination}" and WON JACKPOT 5 000 000 BGN`)
+                    break;
+
             }
         }
 
 
-        if (winningCombination.length === 0 || winningCombination.length === 1) {
-            console.log(`${this.player.name} you guess only one number or none at all.`);
-        }
     }
-
 }
 
 
