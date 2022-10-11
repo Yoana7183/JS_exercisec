@@ -1,7 +1,7 @@
 class RealEstate {
-    constructor(type, squareMeters, adress) {
-        this.constructor.counter = (this.constructor.counter || 0) + 1;
-        this.id = this.constructor.counter;
+    constructor(id, type, squareMeters, adress) {
+
+        this.id = id
         this.type = type;
         this.squareMeters = squareMeters;
         this.adress = adress
@@ -9,11 +9,11 @@ class RealEstate {
 }
 
 const realEstatesData = []
-let office1 = new RealEstate('office', 120, 'sofia 206')
-let apartment1 = new RealEstate('apartment', 67, 'sofia 101')
-let office2 = new RealEstate('office', 100, 'sofia 206')
-let land1 = new RealEstate('land', 100000, 'Elin Pelin 100')
-let land2 = new RealEstate('land', 500, 'Elin Pelin 100')
+let office1 = new RealEstate(1, 'office', 120, 'sofia 206')
+let apartment1 = new RealEstate(2, 'apartment', 30, 'sofia 101')
+let office2 = new RealEstate(3, 'office', 100, 'sofia 206')
+let land1 = new RealEstate(4, 'land', 100000, 'Elin Pelin 100')
+let land2 = new RealEstate(5, 'land', 550, 'Elin Pelin 100')
 realEstatesData.push(office1, apartment1, office2, land1, land2)
 console.log(realEstatesData);
 
@@ -112,7 +112,39 @@ class AssetCalculation {
         }
         return 0;
     }
+
+    getTheAssetWithTheHighestValue() {
+
+        let highestRealEstateValue;
+        let highestAssetValue = 0
+
+        for (let j = 0; j < realEstatesData.length; j++) {
+            highestRealEstateValue = this.findRealEstateByID(realEstatesData[j].id)
+
+            if (highestRealEstateValue > highestAssetValue) {
+                highestAssetValue = highestRealEstateValue
+            }
+        }
+        return highestAssetValue
+    }
+
+    getAssetWithTheLowestMarketValue() {
+
+        var assetWithTheLowestMarketValue = Infinity;
+
+        for (let i = 0; i < realEstatesData.length; i++) {
+            var marketValue = this.findRealEstateByID(realEstatesData[i].id)
+
+            if (marketValue < assetWithTheLowestMarketValue) {
+                assetWithTheLowestMarketValue = marketValue;
+            }
+        }
+        return assetWithTheLowestMarketValue;
+
+    }
+
 }
+
 
 let asset1 = new AssetCalculation(realEstatesData)
 console.log(`Total market price ${asset1.calculateAssetUnderManage()} EUR`);
@@ -120,3 +152,5 @@ console.log(`Net worth price for offices ${asset1.findNetWorthForAsset('office')
 console.log(`Net worth price for apartments ${asset1.findNetWorthForAsset('apartment')} EUR `);
 console.log(`Net worth price for lands ${asset1.findNetWorthForAsset('land')} EUR `);
 console.log(`Net worth price by ID ${asset1.findRealEstateByID(2)} EUR `);
+console.log(`Net worth price of highest asset value:  ${asset1.getTheAssetWithTheHighestValue()} EUR `);
+console.log(`Net worth price of lowest asset value:  ${asset1.getAssetWithTheLowestMarketValue()} EUR `);
