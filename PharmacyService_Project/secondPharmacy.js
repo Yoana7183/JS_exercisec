@@ -18,7 +18,7 @@ class Pharmacy {
         }
         console.log(`You are processing this customer : ${this.customers[0].queueOrder}`);
         this.customers.shift()
-       
+
         return this.customers
     }
 
@@ -28,15 +28,9 @@ class Pharmacy {
             return;
         }
 
-        let currentCustomer;
-     
-        for (let i = 0; i < this.customers.length; i++) {
-            currentCustomer = this.customers[i]
-        }
+       let currentCustomer = this.customers.pop()
         console.log(`You are processing this customer : ${currentCustomer.queueOrder}`);
-        this.customers.pop()
-       
-        return  currentCustomer
+        return currentCustomer
     }
 
 

@@ -45,7 +45,7 @@ class Casino {
 
 
 
-casinoPlayers = new Casino(2, 52)
+casinoPlayers = new Casino(5, 52)
 
 casinoPlayers.createDeckOfCard()
 casinoPlayers.shuffleDeck()

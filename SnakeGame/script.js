@@ -13,18 +13,18 @@ class Snake {
         this.isMoveForward = false
     }
     eat() {
-        if (this.isMoveForward === true) {
-            this.snakeTail.splice(0, 0, '*')
+        if (this.isMoveForward) {
+            this.snakeTail.splice(0, 0, 0)
             console.log(this.snakeTail);
             return this.snakeTail
         }
-        else if (this.isMoveForward === false) {
-            this.snakeTail.push('.')
+        else  {
+            this.snakeTail.push(1)
             console.log(this.snakeTail);
             return this.snakeTail
         }
 
-        return this.snakeTail
+       
     }
 }
 
@@ -33,13 +33,19 @@ snake.moveForward()
 snake.eat('.')
 snake.moveBackward()
 snake.eat('.')
-snake.moveForward()
-snake.eat('.')
-snake.moveBackward()
-snake.eat('.')
-snake.moveForward()
-snake.eat('.')
-snake.moveBackward()
-snake.eat('.')
+//snake.moveForward()
+ snake.eat('.')
+ snake.eat('.')
+ snake.eat('.')
+ snake.moveForward()
+ snake.eat('.')
+ snake.eat('.')
+ snake.eat('.')
+// snake.moveBackward()
+// snake.eat('.')
+// snake.moveForward()
+// snake.eat('.')
+// snake.moveBackward()
+// snake.eat('.')
 
 
