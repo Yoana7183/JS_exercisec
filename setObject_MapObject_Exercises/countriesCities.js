@@ -65,8 +65,8 @@ function findCity(countryName, cityName) {
 
 }
 
-function logCity (city){
-    if(city === undefined){
+function logCity(city) {
+    if (city === undefined) {
         console.log(`There is no such city`);
         return;
     }
