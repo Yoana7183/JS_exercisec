@@ -17,50 +17,103 @@ class Product {
 
 }
 class ShoppingCart {
-    constructor(products) {
-        this.products = products
-        this.shoppingCart = []
+    constructor() {
+        this.shoppingCart = new Map()
 
 
     }
-    add() {
+    addProduct(product) {
 
-        let productList = new Map()
-        for (let i = 0; i < this.products.length; i++) {
-            let key = this.products[i].name
-            let element = this.products[i].price
-            productList.set(key, element)
-
-        }
-
-        return productList
-    }
-    addToCart(name, quantity) {
-        let productList = this.add()
-
-        let price = productList.get(name) * quantity
-        this.shoppingCart.push(price)
+        let key = product
+        let value = 1
+        this.shoppingCart.set(key, value)
 
         return this.shoppingCart
 
+
     }
-    removeProductFromCart(name, quantity) {
-        //   let item =   this.shoppingCart.indexOf(name)
-        console.log(this.shoppingCart);
+    addProducts(product, quantity) {
+
+        if (this.shoppingCart.has(product)) {
+            let updatedValue = this.shoppingCart.get(product) + quantity
+            this.shoppingCart.set(product, updatedValue)
+            return this.shoppingCart
+        }
+
+        let key = product
+        let value = quantity
+        this.shoppingCart.set(key, value)
+        return this.shoppingCart
+
+    }
+    removeProductFromCart(product) {
+        if (this.shoppingCart.has(product)) {
+            let updatedValue = this.shoppingCart.get(product) - 1
+            this.shoppingCart.set(product, updatedValue)
+            return this.shoppingCart
+        } else {
+            console.log(`There is no such product in your cart`);
+        }
+
+    }
+    removeProductsFromCart(product, quantity) {
+        if (this.shoppingCart.has(product)) {
+            let updatedValue = this.shoppingCart.get(product) - quantity
+            this.shoppingCart.set(product, updatedValue)
+            return this.shoppingCart
+        } if (this.shoppingCart.has(product) && this.shoppingCart.get(product) === 0) {
+            this.shoppingCart.delete(product)
+            return this.shoppingCart
+        }
+
+        else { console.log(`There is no such product in your cart`); }
+    }
+
+
+
+    calculateTotalPrice() {
+        let totalPrice = 0
+        this.shoppingCart.forEach((quantity, product) => {
+            totalPrice += product.price * quantity
+        });
+
+        return totalPrice.toFixed(2)
+    }
+    productDiscount() {
+
+
+
+
+
+
 
     }
 }
-
 let product1 = new Product('MilkyBio', 20.10)
 let product2 = new Product('Маджаров ', 49)
 let product3 = new Product('ДОБРУДЖА', 1.90)
 let product4 = new Product('AGFA Photo', 4.80)
-const products = []
-products.push(product1, product2, product3, product4)
+let product5 = new Product('MilkyWay', 2.80)
+let product6 = new Product('Coca-Cola 1l', 1.90)
+let product7 = new Product('Coca-Cola 2l', 2.90)
+let product8 = new Product('Coca-Cola zero 2l', 2.95)
+let product9 = new Product('OralB', 0.99)
 
-let cart = new ShoppingCart(products)
 
-console.log(cart.add());
-console.log(cart.addToCart('ДОБРУДЖА', 4));
-console.log(cart.addToCart('Маджаров ', 0.2));
-console.log(cart.removeProductFromCart('Маджаров ', 1));
+
+let cart = new ShoppingCart()
+
+
+console.log(cart.addProduct(product1));
+console.log(cart.addProduct(product2));
+console.log(cart.addProduct(product3));
+console.log(cart.addProduct(product5));
+console.log(cart.addProduct(product7));
+console.log(cart.addProduct(product8));
+console.log(cart.addProducts(product1, 4));
+console.log(cart.removeProductFromCart(product1));
+console.log(cart.removeProductFromCart(product8));
+console.log(cart.removeProductsFromCart(product1, 2));
+console.log(cart.calculateTotalPrice());
+console.log(cart.productDiscount());
+
