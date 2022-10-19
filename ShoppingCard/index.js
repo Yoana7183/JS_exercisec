@@ -80,12 +80,21 @@ class ShoppingCart {
         return totalPrice.toFixed(2)
     }
     productDiscount() {
+        let totalPrice;
+        let pricing;
+        this.shoppingCart.forEach((quantity, product) => {
+            pricing = product.price * quantity
+         
+            if(pricing >10){
+             pricing = pricing - ((pricing * 10)/100)
+             console.log(pricing);
+            
+            }
+            totalPrice += pricing
 
+        });
 
-
-
-
-
+    
 
     }
 }
