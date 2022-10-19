@@ -7,15 +7,13 @@
 // •  If the amount for a Product is more than 10, the price for that product should be discounted with 10%.
 // •  If the price of the whole shopping cart exceeds 1000, the total price should be discounted with 5%.
 
-
-
 class Product {
     constructor(name, price) {
         this.name = name;
         this.price = price
     }
-
 }
+
 class ShoppingCart {
     constructor() {
         this.shoppingCart = new Map()
@@ -29,8 +27,6 @@ class ShoppingCart {
         this.shoppingCart.set(key, value)
 
         return this.shoppingCart
-
-
     }
     addProducts(product, quantity) {
 
@@ -54,7 +50,6 @@ class ShoppingCart {
         } else {
             console.log(`There is no such product in your cart`);
         }
-
     }
     removeProductsFromCart(product, quantity) {
         if (this.shoppingCart.has(product)) {
@@ -65,11 +60,8 @@ class ShoppingCart {
             this.shoppingCart.delete(product)
             return this.shoppingCart
         }
-
         else { console.log(`There is no such product in your cart`); }
     }
-
-
 
     calculateTotalPrice() {
         let totalPrice = 0
@@ -79,25 +71,39 @@ class ShoppingCart {
 
         return totalPrice.toFixed(2)
     }
+
     productDiscount() {
-        let totalPrice=0
-        let pricing=0
+        let totalPrice = 0
+        let pricing = 0
         let updatedPrice = 0
+        let price = 0
+
         this.shoppingCart.forEach((quantity, product) => {
             pricing = product.price * quantity
 
             if (pricing > 10) {
-                updatedPrice += pricing - ((pricing * 10) / 100)
-             
+                updatedPrice = pricing - ((pricing * 10) / 100)
+                totalPrice += updatedPrice
+            } if (pricing < 10) {
+                price = pricing
+                totalPrice += price
             }
-           totalPrice += pricing 
-            
         });
+        return totalPrice.toFixed(2)
 
-        console.log(updatedPrice);
-        console.log(totalPrice);
-
-
+    }
+    totalBillDiscount(){
+        let bill = this.productDiscount()
+        let totalDiscount = 0
+     
+        if (bill === 1000) {
+            totalDiscount = bill - ((bill*5)/100)
+            console.log(`Your total bill is ${bill}, and you win 5% discount / your total is ${totalDiscount}`);
+            return
+            
+        }
+            console.log(`Your current total bill is ${bill} and you dont have more discounts`);
+        return;
 
     }
 }
@@ -111,21 +117,18 @@ let product7 = new Product('Coca-Cola 2l', 2.90)
 let product8 = new Product('Coca-Cola zero 2l', 2.95)
 let product9 = new Product('OralB', 0.99)
 
-
-
 let cart = new ShoppingCart()
 
-
-console.log(cart.addProduct(product1));
-console.log(cart.addProduct(product2));
-console.log(cart.addProduct(product3));
-console.log(cart.addProduct(product5));
-console.log(cart.addProduct(product7));
-console.log(cart.addProduct(product8));
-console.log(cart.addProducts(product1, 4));
-console.log(cart.removeProductFromCart(product1));
-console.log(cart.removeProductFromCart(product8));
+cart.addProduct(product1)
+cart.addProduct(product2)
+cart.addProduct(product3)
+cart.addProduct(product5)
+cart.addProduct(product7)
+cart.addProduct(product8)
+cart.addProducts(product1, 4)
+cart.removeProductFromCart(product1)
+cart.removeProductFromCart(product8)
 console.log(cart.removeProductsFromCart(product1, 2));
-console.log(cart.calculateTotalPrice());
-console.log(cart.productDiscount());
-
+console.log(`Total without dicount: ${cart.calculateTotalPrice()}`);
+console.log(`Total with product dicount: ${cart.productDiscount()}`);
+console.log(cart.totalBillDiscount());
