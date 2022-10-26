@@ -158,7 +158,14 @@ class Shop {
         return prod
     }
     sellProduct(product,quantity) {
+    let prod;
+        for (let i = 0; i < this.stockInShop.length; i++) {
+            prod = this.stockInShop[i].products
+            console.log(prod.has(product));
 
+           
+        }
+       
     }
 
 
@@ -190,14 +197,32 @@ shop1.addStokes(prodCategory3)
 class Client {
     constructor(name) {
         this.name = name
+        this.shoppingList=[]
+    }
+    addShoppingList(product){
+        this.shoppingList.push(product)
+
+    }
+    getList(){
+        console.log(this.shoppingList);
     }
     shopping(shop) {
-        let shopProduct ;
+        let quantity = Math.floor(Math.random() * 5);
+        let shopProduct = this.shoppingList[Math.floor(Math.random()*this.shoppingList.length)]
+        console.log(shopProduct);
+        console.log(quantity);
+        shop.sellProduct(shopProduct)
 
     }
 }
 let client1 = new Client('Georgi Georgiev')
+client1.addShoppingList(product4)
+client1.addShoppingList(product3)
+client1.addShoppingList(product7)
+client1.addShoppingList(product5)
+client1.addShoppingList(product6)
 client1.shopping(shop1);
+client1.getList()
 let client2 = new Client('Purvan Georgiev')
 let client3 = new Client('Ivan Georgiev')
 let client4 = new Client('Dragan Georgiev')
