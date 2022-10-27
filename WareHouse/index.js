@@ -157,15 +157,26 @@ class Shop {
         }
         return prod
     }
-    sellProduct(product,quantity) {
-    let prod;
+    sellProduct(product, cientQuantity) {
+        let prod;
+
         for (let i = 0; i < this.stockInShop.length; i++) {
             prod = this.stockInShop[i].products
-            console.log(prod.has(product));
 
-           
+            prod.forEach((quantity, item) => {
+
+                if (item == product) {
+                 
+                    let quantityAfterSell = quantity - cientQuantity
+                    prod.set(item, quantityAfterSell)
+                    this.getStokes()
+                    
+                }
+            })
+
+
         }
-       
+      return prod
     }
 
 
@@ -197,21 +208,19 @@ shop1.addStokes(prodCategory3)
 class Client {
     constructor(name) {
         this.name = name
-        this.shoppingList=[]
+        this.shoppingList = []
     }
-    addShoppingList(product){
+    addShoppingList(product) {
         this.shoppingList.push(product)
 
     }
-    getList(){
+    getList() {
         console.log(this.shoppingList);
     }
     shopping(shop) {
         let quantity = Math.floor(Math.random() * 5);
-        let shopProduct = this.shoppingList[Math.floor(Math.random()*this.shoppingList.length)]
-        console.log(shopProduct);
-        console.log(quantity);
-        shop.sellProduct(shopProduct)
+        let shopProduct = this.shoppingList[Math.floor(Math.random() * this.shoppingList.length)]
+        shop.sellProduct(shopProduct, quantity)
 
     }
 }
@@ -222,7 +231,7 @@ client1.addShoppingList(product7)
 client1.addShoppingList(product5)
 client1.addShoppingList(product6)
 client1.shopping(shop1);
-client1.getList()
+
 let client2 = new Client('Purvan Georgiev')
 let client3 = new Client('Ivan Georgiev')
 let client4 = new Client('Dragan Georgiev')
