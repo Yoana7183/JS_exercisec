@@ -157,6 +157,7 @@ class Shop {
         }
         return prod
     }
+
     sellProduct(product, cientQuantity) {
         let prod;
 
@@ -166,17 +167,20 @@ class Shop {
             prod.forEach((quantity, item) => {
 
                 if (item == product) {
-                 
-                    let quantityAfterSell = quantity - cientQuantity
-                    prod.set(item, quantityAfterSell)
+                   
+                    quantity = quantity - cientQuantity
+                    prod.set(item, quantity)
+                    console.log(item,quantity);
                     this.getStokes()
                     
+
                 }
+               
             })
 
 
         }
-      return prod
+        return prod
     }
 
 
