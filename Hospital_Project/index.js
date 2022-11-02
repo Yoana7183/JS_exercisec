@@ -6,12 +6,17 @@ class Doctor {
         this.phoneNumber = phoneNumber;
         this.residency = residency;
         this.isWithPatientNow = false
+        this.patientList = []
     }
     isWithPatient() {
         this.isWithPatientNow = true
     }
     isFree() {
         this.isWithPatientNow = false
+    }
+    appointmentOfAnAttendingPhysicianOnAListOfPatients(patient) {
+        this.patientList.push(patient)
+        console.log(`add patient in patient list `);
     }
 
 }
@@ -25,26 +30,21 @@ class Nurse {
         this.phoneNumber = phoneNumber
     }
 }
-class HospitalBed {
-    constructor(bed) {
-        this.bed = bed
-        this.isBedFreeNow = true
-    }
-    BedFree() {
-        this.isBedFreeNow = true
-    }
-    bedIsOccupied() {
-        this.isBedFreeNow = false
-    }
-}
 class Room {
-    constructor(roomNmber) {
-        this.roomNmber = roomNmber;
-        this.availableHospitalBeds = []
+    constructor() {
+
+        this.roomBedMap = new Map()
     }
-    addBedToTheRoom(...bed) {
-        this.availableHospitalBeds.push(bed)
+    addBedToTheRoom(roomNmber, availableHospitalBeds) {
+        this.roomBedMap.set(roomNmber, availableHospitalBeds)
+
     }
+    showAllRoomsWithAllBeds() {
+        this.roomBedMap.entries()
+    }
+
+
+
 }
 class Department {
     constructor(departmentName) {
@@ -56,8 +56,27 @@ class Department {
         this.rooms.push(...room)
 
     }
+    findFreeRooom() {
+        console.log(`log from department class`);
+        let room;
+
+        for (let i = 0; i < this.rooms.length; i++) {
+            room = this.rooms[i].roomBedMap
+        }
+        return room
+
+    }
+    hospitalisationOfAPatientInAHospital(roomNumber, patient) {
+        let room = this.findFreeRooom()
+        console.log(`update availablehospitalbeds from room class`);
+
+        console.log(room.set(roomNumber, patient));
+    }
 
 }
+
+
+
 
 class Patient {
     constructor(firstName, secondName, age, phoneNumber, sex) {
@@ -78,6 +97,7 @@ class Hospital {
         this.hospitalName = hospitalName
         this.doctorsInTheHospital = []
         this.departments = []
+        this.clinicalPathway = new Map()
     }
     availableHospitalDepartment(department) {
         this.departments.push(department)
@@ -108,26 +128,27 @@ class Hospital {
         let diagnosis = this.defineDiagnosis();
         console.log(`Patient ${patient.firstName}, ${patient.secondName} ; Gender: ${patient.sex}. Is admitted with a diagnosis : "${diagnosis}" 
         Treating doctor: Dr ${doctor.firstName}, ${doctor.secondName}`);
+        doctor.appointmentOfAnAttendingPhysicianOnAListOfPatients(patient)
         return diagnosis
     }
-    findFreeBed(department) {
+    SearchFreeRooomAndBedInTheThreatDepartment(department) {
+        let malesInRoom = true
+        let correctDepartment;
 
-        let room;
-        let bed;
-        let freebed;
+        let allBedsInAllRoomsInDepartment;
         for (let i = 0; i < this.departments.length; i++) {
-            room = this.departments[i]
-            if (room.departmentName === department) {
-                room = this.departments[i].rooms
-                console.log(room);
-                for (let j = 0; j < room.length; j++) {
-                    bed = room[j].availableHospitalBeds
-                    for (let b = 0; b < bed.length; b++) {
-                        freebed = bed[b]
-                       console.log(freebed);
+            correctDepartment = this.departments[i]
 
-                    }
-                };
+            if (correctDepartment.departmentName === department) {
+                allBedsInAllRoomsInDepartment = this.departments[i]
+                console.log(`log from hospital func`);
+                allBedsInAllRoomsInDepartment.findFreeRooom()
+                allBedsInAllRoomsInDepartment.hospitalisationOfAPatientInAHospital(1, [patient2, patient3, patient1])
+
+
+
+
+
 
             }
 
@@ -137,16 +158,16 @@ class Hospital {
 
     determinationOfTreatment(patient) {
         let diagnosis = this.examineThePatient(patient)
-        console.log(diagnosis);
+
         switch (diagnosis) {
             case 'Covid 19':
-                this.findFreeBed('Virology');
+                this.SearchFreeRooomAndBedInTheThreatDepartment('Virology');
                 break;
             case 'Trauma':
-                this.findFreeBed('Orthopedics');
+                this.SearchFreeRooomAndBedInTheThreatDepartment('Orthopedics');
                 break;
             case 'High blood pressure':
-                this.findFreeBed('Cardiology');
+                this.SearchFreeRooomAndBedInTheThreatDepartment('Cardiology');
                 break;
             default:
                 console.log(`in default`);
@@ -171,34 +192,33 @@ let nurse3 = new Nurse('Petrana', 'Ivanova', '17', '0883776');
 let patient1 = new Patient('Yordan', 'Yordanov', '28', '908979878', 'male')
 let patient2 = new Patient('Martin', 'Petvor', '38', '908979878', 'male')
 let patient3 = new Patient('Mariq', 'Yordanova', '18', '908979878', 'female')
-let bed1 = new HospitalBed('first bed')
-let bed2 = new HospitalBed('second bed')
-let bed3 = new HospitalBed('third bed')
-const bed = []
-bed.push(bed1, bed2, bed3)
 
-let room1 = new Room(1)
-room1.addBedToTheRoom(bed)
-let room2 = new Room(2)
-room2.addBedToTheRoom(bed)
-let room3 = new Room(3)
-room3.addBedToTheRoom(bed)
-let room4 = new Room(4)
-room4.addBedToTheRoom(bed)
-let room5 = new Room(5)
-room5.addBedToTheRoom(bed)
-let room6 = new Room(6)
-room6.addBedToTheRoom(bed)
-let room7 = new Room(7)
-room7.addBedToTheRoom(bed)
-let room8 = new Room(8)
-room8.addBedToTheRoom(bed)
-let room9 = new Room(9)
-room9.addBedToTheRoom(bed)
-let room10 = new Room(10)
-room10.addBedToTheRoom(bed)
+
+let room1 = new Room()
+room1.addBedToTheRoom(1, 3)
+let room2 = new Room()
+room2.addBedToTheRoom(2, 3)
+let room3 = new Room()
+room3.addBedToTheRoom(3, 3)
+let room4 = new Room()
+room4.addBedToTheRoom(4, 3)
+let room5 = new Room()
+room5.addBedToTheRoom(5, 3)
+let room6 = new Room()
+room6.addBedToTheRoom(6, 3)
+let room7 = new Room()
+room7.addBedToTheRoom(7, 3)
+let room8 = new Room()
+room8.addBedToTheRoom(8, 3)
+let room9 = new Room()
+room9.addBedToTheRoom(9, 3)
+let room10 = new Room()
+room10.addBedToTheRoom(10, 3)
+
 const rooms = []
 rooms.push(room1, room2, room3, room4, room5, room6, room7, room8, room9, room10)
+
+
 
 let virologyDepartment = new Department('Virology')
 virologyDepartment.addRoomsToDepartment(rooms)
@@ -208,6 +228,7 @@ cardiologyDepartment.addRoomsToDepartment(rooms)
 
 let orthopaedicDepartment = new Department('Orthopedics')
 orthopaedicDepartment.addRoomsToDepartment(rooms)
+
 
 let hospital = new Hospital('First Hospital')
 hospital.availableHospitalDepartment(virologyDepartment)
