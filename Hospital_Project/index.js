@@ -15,32 +15,64 @@ class Doctor {
         this.isWithPatientNow = false
     }
     appointmentOfAnAttendingPhysicianOnAListOfPatients(patient) {
-        this.patientList.push(patient)
-        console.log(`add patient in patient list `);
+        if (this.patientList.length >= 3) {
+            console.log(`Dr. ${this.firstName} ${this.secondName} are bisy with his patient, please wait until he free`);
+        } else {
+            this.patientList.push(patient)
+            console.log(`Dr. ${this.firstName} ${this.secondName} ADD PATIENT ${patient.firstName} IN HIS/HER DOCTOR LIST`);
+        }
+    }
+    getPatientList() {
+
     }
 
 }
 
 
 class Nurse {
-    constructor(firstName, secondName, yearsОfЕxperience, phoneNumber) {
+    constructor(firstName, secondName, yearsOfЕxperience, phoneNumber) {
         this.firstName = firstName;
         this.secondName = secondName;
-        this.yearsОfЕxperience = yearsОfЕxperience;
-        this.phoneNumber = phoneNumber
+        this.yearsOfЕxperience = yearsOfЕxperience;
+        this.phoneNumber = phoneNumber;
     }
 }
-class Room {
-    constructor() {
+class Beds {
+    constructor(bedName) {
+        this.bedName = bedName
+        this.isOccupied = false
+        this.patientOnCurrentBed = []
 
-        this.roomBedMap = new Map()
     }
-    addBedToTheRoom(roomNmber, availableHospitalBeds) {
-        this.roomBedMap.set(roomNmber, availableHospitalBeds)
+    addPatientToTheBed(patient) {
+        this.patientOnCurrentBed.push(patient)
+        console.log(`This ${patient.firstName} is in ${this.bedName} and this ${this.bedName} is OCCUPIED!`);
+
+
+    }
+
+}
+let bed1 = new Beds('first bed')
+let bed2 = new Beds('second bed')
+let bed3 = new Beds('third bed')
+const beds = []
+beds.push(bed1, bed2, bed3)
+class Room {
+    constructor(roomNumber) {
+       this.roomNumber=roomNumber
+        this.room = []
+
+    }
+    addBedToTheRoom(...bed) {
+        this.room.push(bed)
 
     }
     showAllRoomsWithAllBeds() {
-        this.roomBedMap.entries()
+        let allrooms;
+        for (let i = 0; i < this.room.length; i++) {
+            allrooms = this.room[i]
+            console.log(allrooms);
+        }
     }
 
 
@@ -57,23 +89,59 @@ class Department {
 
     }
     findFreeRooom() {
-        console.log(`log from department class`);
         let room;
-
         for (let i = 0; i < this.rooms.length; i++) {
-            room = this.rooms[i].roomBedMap
+            room = this.rooms[i]
+
         }
         return room
 
     }
-    hospitalisationOfAPatientInAHospital(roomNumber, patient) {
+    hospitalisationOfAPatientInAHospital(patientsFromDoctorList) {
         let room = this.findFreeRooom()
-        console.log(`update availablehospitalbeds from room class`);
+        let currentPatient;
+        let bedsInRoom;
+        let thisBed;
 
-        console.log(room.set(roomNumber, patient));
+        for (let a = 0; a < patientsFromDoctorList.length; a++) {
+            currentPatient = patientsFromDoctorList[a]
+            currentPatient.isHospitalized = true
+
+            for (let i = 0; i < room.room.length; i++) {
+                bedsInRoom = room.room[i];
+
+                let isPatientHospitalized = false
+
+                for (let j = 0; j < bedsInRoom.length; j++) {
+                    thisBed = bedsInRoom[j]
+
+
+                    if (thisBed.isOccupied === false) {
+                        thisBed.isOccupied = true
+                        console.log(`Patient ${currentPatient.firstName} / age: ${currentPatient.age} in bed : ${thisBed.bedName} and room number: ${room.roomNumber}`);
+                        thisBed.addPatientToTheBed(currentPatient)
+                        isPatientHospitalized = true
+                        break;
+                        
+                    }
+                        
+                        
+                }
+
+                if(isPatientHospitalized){
+                    break;
+                }
+
+                }
+                console.log(`CURRENT AVAILABLE BED IN ${thisBed.bedName}  :`);
+                console.log(bedsInRoom);
+            }
+
+        }
+
     }
 
-}
+
 
 
 
@@ -86,6 +154,7 @@ class Patient {
         this.phoneNumber = phoneNumber
         this.sex = sex
         this.isCured = false
+        this.isHospitalized = false
     };
     isCured() {
         this.isCured = true
@@ -132,23 +201,16 @@ class Hospital {
         return diagnosis
     }
     SearchFreeRooomAndBedInTheThreatDepartment(department) {
-        let malesInRoom = true
         let correctDepartment;
+        let doctor = this.callADoctorToexamineApatient()
 
-        let allBedsInAllRoomsInDepartment;
+
         for (let i = 0; i < this.departments.length; i++) {
             correctDepartment = this.departments[i]
 
             if (correctDepartment.departmentName === department) {
-                allBedsInAllRoomsInDepartment = this.departments[i]
-                console.log(`log from hospital func`);
-                allBedsInAllRoomsInDepartment.findFreeRooom()
-                allBedsInAllRoomsInDepartment.hospitalisationOfAPatientInAHospital(1, [patient2, patient3, patient1])
-
-
-
-
-
+                correctDepartment.findFreeRooom()
+                correctDepartment.hospitalisationOfAPatientInAHospital(doctor.patientList)
 
             }
 
@@ -192,28 +254,36 @@ let nurse3 = new Nurse('Petrana', 'Ivanova', '17', '0883776');
 let patient1 = new Patient('Yordan', 'Yordanov', '28', '908979878', 'male')
 let patient2 = new Patient('Martin', 'Petvor', '38', '908979878', 'male')
 let patient3 = new Patient('Mariq', 'Yordanova', '18', '908979878', 'female')
+let patient4 = new Patient('Ivanka', 'Yordanova', '18', '908979878', 'female')
+let patient5 = new Patient('Ivan', 'Yordanov', '28', '908979878', 'male')
+let patient6 = new Patient('Martin', 'Marinov', '48', '908979878', 'male')
+let patient7 = new Patient('Ivanka', 'Yordanova', '38', '908979878', 'female')
+let patient8 = new Patient('Ivanka', 'Yordanova', '18', '908979878', 'female')
+let patient9 = new Patient('Ivanka', 'Yordanova', '28', '908979878', 'female')
+let patient10 = new Patient('Asen', 'Asenov', '18', '908979878', 'male')
 
 
-let room1 = new Room()
-room1.addBedToTheRoom(1, 3)
-let room2 = new Room()
-room2.addBedToTheRoom(2, 3)
-let room3 = new Room()
-room3.addBedToTheRoom(3, 3)
-let room4 = new Room()
-room4.addBedToTheRoom(4, 3)
-let room5 = new Room()
-room5.addBedToTheRoom(5, 3)
-let room6 = new Room()
-room6.addBedToTheRoom(6, 3)
-let room7 = new Room()
-room7.addBedToTheRoom(7, 3)
-let room8 = new Room()
-room8.addBedToTheRoom(8, 3)
-let room9 = new Room()
-room9.addBedToTheRoom(9, 3)
-let room10 = new Room()
-room10.addBedToTheRoom(10, 3)
+let room1 = new Room(1)
+room1.addBedToTheRoom(...beds)
+let room2 = new Room(2)
+room2.addBedToTheRoom(...beds)
+let room3 = new Room(3)
+room3.addBedToTheRoom(...beds)
+let room4 = new Room(4)
+room4.addBedToTheRoom(...beds)
+let room5 = new Room(5)
+room5.addBedToTheRoom(...beds)
+let room6 = new Room(6)
+room6.addBedToTheRoom(...beds)
+let room7 = new Room(7)
+room7.addBedToTheRoom(...beds)
+let room8 = new Room(8)
+room8.addBedToTheRoom(...beds)
+let room9 = new Room(9)
+room9.addBedToTheRoom(...beds)
+let room10 = new Room(10)
+room10.addBedToTheRoom(...beds)
+
 
 const rooms = []
 rooms.push(room1, room2, room3, room4, room5, room6, room7, room8, room9, room10)
@@ -238,6 +308,16 @@ hospital.appointedDoctorsToTheHospital(doc1)
 hospital.appointedDoctorsToTheHospital(doc2)
 hospital.appointedDoctorsToTheHospital(doc3)
 hospital.determinationOfTreatment(patient1)
+hospital.determinationOfTreatment(patient2)
+hospital.determinationOfTreatment(patient3)
+hospital.determinationOfTreatment(patient4)
+hospital.determinationOfTreatment(patient5)
+hospital.determinationOfTreatment(patient6)
+hospital.determinationOfTreatment(patient7)
+hospital.determinationOfTreatment(patient8)
+hospital.determinationOfTreatment(patient9)
+hospital.determinationOfTreatment(patient10)
+
 
 
 
