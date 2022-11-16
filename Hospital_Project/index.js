@@ -7,6 +7,7 @@ class Doctor {
         this.residency = residency;
         this.isWithPatientNow = false
         this.patientList = []
+
     }
     isWithPatient() {
         this.isWithPatientNow = true
@@ -23,9 +24,23 @@ class Doctor {
         }
     }
     getPatientList() {
-
+     console.log(this.patientList);
     }
 
+   removingThePatientFromDoctorsListAfterHospitalation(){
+    let patientFromPationList;
+    let deletedPation;
+    for(let i=0;i<this.patientList.length;i++){
+      patientFromPationList = this.patientList[i]
+      if(patientFromPationList.isHospitalized== true || patientFromPationList.isCured == true){
+        deletedPation = indexOf(patientFromPationList)
+        console.log(deletedPation);
+        this.patientList.splice(deletedPation,1)
+        this.getPatientList()
+
+     }
+    }
+   }
 }
 
 
@@ -59,8 +74,9 @@ const beds = []
 beds.push(bed1, bed2, bed3)
 class Room {
     constructor(roomNumber) {
-       this.roomNumber=roomNumber
+        this.roomNumber = roomNumber
         this.room = []
+        this.isTheRoomOccupied = false
 
     }
     addBedToTheRoom(...bed) {
@@ -71,11 +87,13 @@ class Room {
         let allrooms;
         for (let i = 0; i < this.room.length; i++) {
             allrooms = this.room[i]
+            console.log(this.roomNumber);
             console.log(allrooms);
+
         }
+     
     }
-
-
+    
 
 }
 class Department {
@@ -88,28 +106,54 @@ class Department {
         this.rooms.push(...room)
 
     }
+ 
     findFreeRooom() {
         let room;
         for (let i = 0; i < this.rooms.length; i++) {
             room = this.rooms[i]
+            if (room.isTheRoomOccupied === false) {
+                return room 
+            }else{
+                console.log(`This room is already occupied`);
+
+            }
 
         }
-        return room
+       
 
     }
+    closeTheRoomIfIAllBedsAreOccupied(){
+        let bedsInRoom
+        for (let i = 0; i < this.rooms.length; i++) {
+            bedsInRoom = this.rooms[i]
+            console.log(`log from close room func`);
+           console.log(bedsInRoom);
+           bedsInRoom.showAllRoomsWithAllBeds()
+              if(bedsInRoom.length === 3){
+                bedsInRoom.isTheRoomOccupied= true
+              }
+            
+
+        }
+    }
+    
+ 
     hospitalisationOfAPatientInAHospital(patientsFromDoctorList) {
         let room = this.findFreeRooom()
+        room.showAllRoomsWithAllBeds()
         let currentPatient;
         let bedsInRoom;
         let thisBed;
 
         for (let a = 0; a < patientsFromDoctorList.length; a++) {
             currentPatient = patientsFromDoctorList[a]
+           
             currentPatient.isHospitalized = true
+            console.log(currentPatient);
 
             for (let i = 0; i < room.room.length; i++) {
                 bedsInRoom = room.room[i];
-
+                       
                 let isPatientHospitalized = false
 
                 for (let j = 0; j < bedsInRoom.length; j++) {
@@ -118,28 +162,29 @@ class Department {
 
                     if (thisBed.isOccupied === false) {
                         thisBed.isOccupied = true
-                        console.log(`Patient ${currentPatient.firstName} / age: ${currentPatient.age} in bed : ${thisBed.bedName} and room number: ${room.roomNumber}`);
+                        console.log(`Patient ${currentPatient.firstName} / age: ${currentPatient.age} in bed : ${thisBed.bedName} and room number: ${room.roomNumber} room status : ${thisBed.isTheRoomOccupied}`);
                         thisBed.addPatientToTheBed(currentPatient)
                         isPatientHospitalized = true
+                       this.closeTheRoomIfIAllBedsAreOccupied()
                         break;
-                        
+
                     }
-                        
-                        
+
                 }
 
-                if(isPatientHospitalized){
+                if (isPatientHospitalized) {
+
                     break;
                 }
 
-                }
-                console.log(`CURRENT AVAILABLE BED IN ${thisBed.bedName}  :`);
-                console.log(bedsInRoom);
             }
-
+            console.log(`CURRENT AVAILABLE BED IN ${thisBed.bedName}  :`);
+           
         }
 
     }
+
+}
 
 
 
