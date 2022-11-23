@@ -154,8 +154,8 @@ class Library {
                 return console.error(err);
             }
             console.log(`READING DATA FROM JSON FILE`);
-           let currData =  JSON.parse(data)    
-           console.log(currData);
+           let dataFromJSON =  JSON.parse(data)    
+           console.log(dataFromJSON);
         
         })
     }
