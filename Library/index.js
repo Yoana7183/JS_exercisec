@@ -134,9 +134,10 @@ class Library {
         }
     }
 
-    addingTheAvailableBookstoafile(){
+    writeBooksInStockInJSONfile(){
+
         const fs = require("fs")
-        let book = book1
+        let book = [...this.libraryBooks]
         const data = JSON.stringify(book)
         fs.writeFile('booksInLibrary.json', data, err =>{
             if(err){
@@ -146,6 +147,18 @@ class Library {
         })
         
     }
+    readBooksInStockInJSONfile(){
+        const fs = require("fs");
+        fs.readFile('booksInLibrary.json', function(err, data){
+            if(err){
+                return console.error(err);
+            }
+            console.log(`READING DATA FROM JSON FILE`);
+            console.log("Data read :" + data.toString());
+            return data
+        })
+    }
+    
 }
 
 
@@ -180,4 +193,5 @@ library.lendBook(book2)
 library.updateBook(book1)
 library.deleteBook(book1)
 library.lendBook(book1)
-library.addingTheAvailableBookstoafile()
+library.writeBooksInStockInJSONfile()
+library.readBooksInStockInJSONfile()
