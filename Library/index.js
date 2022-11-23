@@ -23,6 +23,11 @@ class User {
         console.log(`Hallo, I am ${this.name} and my list of books contains ${this.listOfBooks.length} books, which are :`);
         console.log(this.listOfBooks);
     }
+    getMyCurrentBorrowedBooksLis(){
+        console.log(`Hallo, I am ${this.name} and my list of BORROWED books contains ${this.borrowedBooks.length} books, which are :`);
+        console.log(this.borrowedBooks);
+    }
+    
 
     checkIfTheBookIsAlreadyInMyList(bookForCheck) {
         let currenBook;
@@ -45,7 +50,7 @@ class User {
             this.borrowedBooks.push(bookToBorrow)
         }
 
-        console.log(`You borrow new book ${bookToBorrow.id}`);
+        console.log(`You borrow new book id: ${bookToBorrow.id}`);
         console.log(this.borrowedBooks.length);
         return this.borrowedBooks
 
@@ -79,14 +84,68 @@ class Library {
     constructor(libraryName) {
         this.libraryName = libraryName
         this.libraryBooks = []
+        this.landedBooks = []
     }
-    searchBook() { }
-    addBook() { }
-    lendBook() { }
-    updateBook() { }
-    deleteBook() { }
 
 
+    searchBook(book) {
+        let currentBook;
+
+        for (let i = 0; i < this.libraryBooks.length; i++) {
+            currentBook = this.libraryBooks[i]
+            if (currentBook.id === book.id) {
+                console.log(`the librarian found the book you were looking for id: ${currentBook.id}`);
+
+                return currentBook
+            }
+
+        }
+        console.log(`The book you are looking for is currently unavailable`)
+        return currentBook
+    }
+    addBook(book) {
+        this.libraryBooks.push(book)
+    }
+    lendBook(bookForLand) {
+        let thisBookForLand = this.searchBook(bookForLand)
+        if (bookForLand.id === thisBookForLand.id) {
+            console.log(`the librarian lends this book and add this book in the LENDED LIST !`);
+
+        } else {
+            return thisBookForLand
+        }
+    }
+
+    updateBook(bookForUpdate) {
+        let thisBookForUpdate = this.searchBook(bookForUpdate)
+
+        if (thisBookForUpdate.id === bookForUpdate.id) {
+            thisBookForUpdate.price = 12
+            console.log(thisBookForUpdate);
+        }
+    }
+    deleteBook(bookForDelete) {
+        let thisBookForDelete = this.searchBook(bookForDelete)
+
+        if (thisBookForDelete.id === bookForDelete.id) {
+            console.log(`the librarian discards a book with id: ${thisBookForDelete.id} from the library`);
+            let index = this.libraryBooks.indexOf(thisBookForDelete)
+            this.libraryBooks.splice(index, 1)
+        }
+    }
+
+    addingTheAvailableBookstoafile(){
+        const fs = require("fs")
+        let book = book1
+        const data = JSON.stringify(book)
+        fs.writeFile('booksInLibrary.json', data, err =>{
+            if(err){
+                throw err
+            }
+            console.log('JSON DATA IS SAVED');
+        })
+        
+    }
 }
 
 
@@ -111,4 +170,14 @@ user1.borrowBook(book4)
 user1.borrowBook(book2)
 user1.returnBook(book3)
 
-let library = new Library ("Ivan Vazov National Library")
+let library = new Library("Ivan Vazov National Library")
+library.addBook(book1)
+library.addBook(book10)
+library.addBook(book9)
+library.addBook(book8)
+library.searchBook(book1)
+library.lendBook(book2)
+library.updateBook(book1)
+library.deleteBook(book1)
+library.lendBook(book1)
+library.addingTheAvailableBookstoafile()
