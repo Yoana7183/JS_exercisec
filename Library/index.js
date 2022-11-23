@@ -154,8 +154,9 @@ class Library {
                 return console.error(err);
             }
             console.log(`READING DATA FROM JSON FILE`);
-            console.log("Data read :" + data.toString());
-            return data
+           let currData =  JSON.parse(data)    
+           console.log(currData);
+        
         })
     }
     
