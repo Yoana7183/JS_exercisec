@@ -1,4 +1,3 @@
-
 class Book {
     constructor(id, ISBN, title, author, publishedYear, price) {
         this.id = id
@@ -106,6 +105,9 @@ class Library {
     addBook(book) {
         this.libraryBooks.push(book)
     }
+    getLibraryBooks(){
+        console.log(this.libraryBooks);
+    }
     lendBook(bookForLand) {
         let thisBookForLand = this.searchBook(bookForLand)
         if (bookForLand.id === thisBookForLand.id) {
@@ -161,6 +163,24 @@ class Library {
     }
     
 }
+class Librarian {
+    constructor (name){
+        this.name = name
+        this.workSpaceLibrary = []
+      
+    }
+    addWorkingPlace(library){
+    this.workSpaceLibrary.push(library)
+    }
+    getWorkSpaceLibrary(){
+        console.log(this.workSpaceLibrary);
+    }
+    customerServiceForBorrowingABookFromTheLiibrary(theBookToBeBorrowed){
+     this.workSpaceLibrary.lendBook(theBookToBeBorrowed)
+    }
+
+}
+
 
 
 let book1 = new Book(1, "isbn23456", "Everyday Italian", "Giada De Laurentiis", "2005", 30.00)
@@ -173,26 +193,32 @@ let book7 = new Book(7, "isbn2345613146", " Moby Dic", "GF. Scott Fitzgerald", "
 let book8 = new Book(8, "isbn2345613147", " Madame Bovary", "Gustave Flaubert", "2006", 24.00)
 let book9 = new Book(9, "isbn2345613148", " The Divine Comedy", "Dante Alighieri", "2007", 27.00)
 let book10 = new Book(10, "isbn2345613149", "The Brothers Karamazov ", "Fyodor Dostoyevsky", "2008", 29.00)
-
+console.log(`LOG FROM USER`);
 let user1 = new User('Pesho')
 user1.addBooksInmyListOfBooks(book1)
 user1.addBooksInmyListOfBooks(book2)
 user1.getMyListOfBooks()
-user1.borrowBook(book3)
 user1.borrowBook(book1)
-user1.borrowBook(book4)
-user1.borrowBook(book2)
-user1.returnBook(book3)
-
+// user1.borrowBook(book1)
+// user1.borrowBook(book4)
+// user1.borrowBook(book2)
+// user1.returnBook(book3)
+console.log(`LOG FROM LIBRARY`);
 let library = new Library("Ivan Vazov National Library")
 library.addBook(book1)
-library.addBook(book10)
-library.addBook(book9)
-library.addBook(book8)
-library.searchBook(book1)
-library.lendBook(book2)
-library.updateBook(book1)
-library.deleteBook(book1)
-library.lendBook(book1)
+// library.addBook(book10)
+// library.addBook(book9)
+// library.addBook(book8)
+// library.searchBook(book1)
+// library.lendBook(book2)
+// library.updateBook(book1)
+// library.deleteBook(book1)
+// library.lendBook(book1)
 library.writeBooksInStockInJSONfile()
 library.readBooksInStockInJSONfile()
+
+console.log(`LOG FROM LIBRARIAN`);
+let librarian1 = new Librarian('Gosho')
+librarian1.addWorkingPlace(library)
+librarian1.getWorkSpaceLibrary()
+librarian1.customerServiceForBorrowingABookFromTheLiibrary(book1)
