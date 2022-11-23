@@ -22,11 +22,11 @@ class User {
         console.log(`Hallo, I am ${this.name} and my list of books contains ${this.listOfBooks.length} books, which are :`);
         console.log(this.listOfBooks);
     }
-    getMyCurrentBorrowedBooksLis(){
+    getMyCurrentBorrowedBooksLis() {
         console.log(`Hallo, I am ${this.name} and my list of BORROWED books contains ${this.borrowedBooks.length} books, which are :`);
         console.log(this.borrowedBooks);
     }
-    
+
 
     checkIfTheBookIsAlreadyInMyList(bookForCheck) {
         let currenBook;
@@ -105,15 +105,19 @@ class Library {
     addBook(book) {
         this.libraryBooks.push(book)
     }
-    getLibraryBooks(){
+    getLibraryBooks() {
         console.log(this.libraryBooks);
     }
     lendBook(bookForLand) {
         let thisBookForLand = this.searchBook(bookForLand)
         if (bookForLand.id === thisBookForLand.id) {
+            this.landedBooks.push(thisBookForLand)
+            let index = this.libraryBooks.indexOf(thisBookForLand)
+            this.libraryBooks.splice(index, 1)
             console.log(`the librarian lends this book and add this book in the LENDED LIST !`);
 
         } else {
+
             return thisBookForLand
         }
     }
@@ -136,47 +140,47 @@ class Library {
         }
     }
 
-    writeBooksInStockInJSONfile(){
+    writeBooksInStockInJSONfile() {
 
         const fs = require("fs")
         let book = [...this.libraryBooks]
         const data = JSON.stringify(book)
-        fs.writeFile('booksInLibrary.json', data, err =>{
-            if(err){
+        fs.writeFile('booksInLibrary.json', data, err => {
+            if (err) {
                 throw err
             }
             console.log('JSON DATA IS SAVED');
         })
-        
+
     }
-    readBooksInStockInJSONfile(){
+    readBooksInStockInJSONfile() {
         const fs = require("fs");
-        fs.readFile('booksInLibrary.json', function(err, data){
-            if(err){
+        fs.readFile('booksInLibrary.json', function (err, data) {
+            if (err) {
                 return console.error(err);
             }
             console.log(`READING DATA FROM JSON FILE`);
-           let dataFromJSON =  JSON.parse(data)    
-           console.log(dataFromJSON);
-        
+            let dataFromJSON = JSON.parse(data)
+            console.log(dataFromJSON);
+
         })
     }
-    
+
 }
 class Librarian {
-    constructor (name){
+    constructor(name) {
         this.name = name
-        this.workSpaceLibrary = []
-      
+        this.workSpaceLibrary = library
+
     }
-    addWorkingPlace(library){
-    this.workSpaceLibrary.push(library)
+    addWorkingPlace(library) {
+        this.workSpaceLibrary = library
     }
-    getWorkSpaceLibrary(){
+    getWorkSpaceLibrary() {
         console.log(this.workSpaceLibrary);
     }
-    customerServiceForBorrowingABookFromTheLiibrary(theBookToBeBorrowed){
-     this.workSpaceLibrary.lendBook(theBookToBeBorrowed)
+    customerServiceForBorrowingABookFromTheLiibrary(theBookToBeBorrowed) {
+        this.workSpaceLibrary.lendBook(theBookToBeBorrowed)
     }
 
 }
@@ -214,8 +218,8 @@ library.addBook(book1)
 // library.updateBook(book1)
 // library.deleteBook(book1)
 // library.lendBook(book1)
-library.writeBooksInStockInJSONfile()
-library.readBooksInStockInJSONfile()
+// library.writeBooksInStockInJSONfile()
+// library.readBooksInStockInJSONfile()
 
 console.log(`LOG FROM LIBRARIAN`);
 let librarian1 = new Librarian('Gosho')
