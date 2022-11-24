@@ -54,10 +54,10 @@ class User {
         }
         return isTheListContainTheBook
     }
-    askTheLibrarianForABook(books){
-         let allBooks = books
-         let wantedBook = allBooks[Math.floor(Math.random()* allBooks.length)]
-         return wantedBook
+    askTheLibrarianForABook(books) {
+        let allBooks = books
+        let wantedBook = allBooks[Math.floor(Math.random() * allBooks.length)]
+        return wantedBook
     }
     borrowBook(bookToBorrow) {
 
@@ -65,14 +65,17 @@ class User {
         let chekForTheBookInBorrowList = this.checkIfThatBookIsInMyBorrowedList(bookToBorrow)
         if (checkForThsBookInTheList === true && chekForTheBookInBorrowList === true) {
             return checkForThsBookInTheList
-        } 
-        if (checkForThsBookInTheList === false && chekForTheBookInBorrowList === false) {
-            this.borrowedBooks.push(bookToBorrow)
-            console.log(`I borrow a new book wich id is : ${bookToBorrow.id}`);
-            console.log(this.borrowedBooks.length);
-               return
+        } if (this.borrowedBooks.length <3) {
+            if (checkForThsBookInTheList === false && chekForTheBookInBorrowList === false) {
+                this.borrowedBooks.push(bookToBorrow)
+                console.log(`I borrow a new book wich id is : ${bookToBorrow.id}`);
+                console.log(this.borrowedBooks.length);
+                return;
+            }
+        } if (this.borrowedBooks.length === 3) {
+            console.log(`You cannot take more than 3 books`);
+            return
         }
-
         return this.borrowedBooks
 
     }
@@ -196,23 +199,29 @@ class Librarian {
     openTheLibraryEntranceForCustomers(customer) {
         this.customers.push(customer)
     }
+    processedCustomer(){
+        this.customers.shift()
+    }
     processTheCustomerWhoseTurnCameFromTheQueue() {
         if (this.customers.length === 0) {
             console.log(`You served all the customers`);
             return;
         }
         let currentCustomer = this.customers[0]
-        console.log(`LOG FROM QUEUE`);
-        let theBookTheCustomerWants = currentCustomer.askTheLibrarianForABook(books)
-        console.log(theBookTheCustomerWants);
-        this.workSpaceLibrary[0].lendBook(theBookTheCustomerWants)
-        console.log(this.workSpaceLibrary);
-        currentCustomer.borrowBook(theBookTheCustomerWants)
+        return currentCustomer
+    
 
     }
 
-    customerServiceForBorrowingABookFromTheLiibrary(theBookToBeBorrowed) {
-
+    customerServiceForBorrowingABookFromTheLiibrary() {
+        let customerInOrder = this.processTheCustomerWhoseTurnCameFromTheQueue()
+        console.log(`LOG FROM QUEUE`);
+        let theBookTheCustomerWants = customerInOrder.askTheLibrarianForABook(books)
+        console.log(theBookTheCustomerWants);
+        this.workSpaceLibrary[0].lendBook(theBookTheCustomerWants)
+        console.log(this.workSpaceLibrary);
+        customerInOrder.borrowBook(theBookTheCustomerWants)
+        customerInOrder.getMyCurrentBorrowedBooksLis()
     }
 
 }
@@ -237,13 +246,8 @@ let user1 = new User('Pesho')
 
 user1.addBooksInmyListOfBooks(book1)
 user1.addBooksInmyListOfBooks(book2)
-user1.getMyListOfBooks()
-user1.borrowBook(book1)
-user1.borrowBook(book3)
-user1.borrowBook(book3)
-user1.borrowBook(book4)
-user1.borrowBook(book4)
-user1.borrowBook(book4)
+
+
 
 
 let user2 = new User('Gosho')
@@ -267,9 +271,7 @@ library.addBook(book7)
 library.addBook(book8)
 library.addBook(book9)
 library.addBook(book10)
-// library.addBook(book10)
-// library.addBook(book9)
-// library.addBook(book8)
+
 // library.searchBook(book1)
 // library.lendBook(book2)
 // library.updateBook(book1)
@@ -284,14 +286,6 @@ librarian1.addWorkingPlace(library)
 
 librarian1.openTheLibraryEntranceForCustomers(user1)
 librarian1.processTheCustomerWhoseTurnCameFromTheQueue()
-librarian1.processTheCustomerWhoseTurnCameFromTheQueue()
-librarian1.processTheCustomerWhoseTurnCameFromTheQueue()
-librarian1.processTheCustomerWhoseTurnCameFromTheQueue()
-librarian1.processTheCustomerWhoseTurnCameFromTheQueue()
-librarian1.processTheCustomerWhoseTurnCameFromTheQueue()
-librarian1.processTheCustomerWhoseTurnCameFromTheQueue()
-librarian1.processTheCustomerWhoseTurnCameFromTheQueue()
-librarian1.processTheCustomerWhoseTurnCameFromTheQueue()
-librarian1.processTheCustomerWhoseTurnCameFromTheQueue()
-
+librarian1.customerServiceForBorrowingABookFromTheLiibrary()
+librarian1.customerServiceForBorrowingABookFromTheLiibrary()
 
