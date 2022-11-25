@@ -8,25 +8,26 @@ class Book {
         this.price = price
     }
 }
-
 class User {
     constructor(name) {
         this.name = name
         this.listOfBooks = []
         this.borrowedBooks = []
     }
+
     addBooksInmyListOfBooks(book) {
         this.listOfBooks.push(book)
     }
+
     getMyListOfBooks() {
         console.log(`Hallo, I am ${this.name} and this is my list of books wich contains ${this.listOfBooks.length} books :`);
         console.log(this.listOfBooks);
     }
+
     getMyCurrentBorrowedBooksLis() {
         console.log(`Hallo, I am ${this.name} and this is my list with BORROWED books wich contains ${this.borrowedBooks.length} books :`);
         console.log(this.borrowedBooks);
     }
-
 
     checkIfTheBookIsAlreadyInMyList(bookForCheck) {
         let currenBookinTheList;
@@ -54,18 +55,35 @@ class User {
         }
         return isTheListContainTheBook
     }
+
     askTheLibrarianForABook(books) {
         let allBooks = books
         let wantedBook = allBooks[Math.floor(Math.random() * allBooks.length)]
         return wantedBook
     }
+
+    ifINoLongerOwnOrHaveReadThisBook(bookToBorrow) {
+        let isAddInMyBorrowList;
+        let currentListLength = this.borrowedBooks.length
+
+        this.borrowBook(bookToBorrow)
+        let currentListLengthAfterRunBorrowFunc = this.borrowedBooks.length
+
+        if (currentListLength === currentListLengthAfterRunBorrowFunc) {
+            return isAddInMyBorrowList = false
+        } if (currentListLength < currentListLengthAfterRunBorrowFunc) {
+            return isAddInMyBorrowList = true
+        }
+        return isAddInMyBorrowList
+    }
+
     borrowBook(bookToBorrow) {
 
         let checkForThsBookInTheList = this.checkIfTheBookIsAlreadyInMyList(bookToBorrow)
         let chekForTheBookInBorrowList = this.checkIfThatBookIsInMyBorrowedList(bookToBorrow)
         if (checkForThsBookInTheList === true && chekForTheBookInBorrowList === true) {
             return checkForThsBookInTheList
-        } if (this.borrowedBooks.length <3) {
+        } if (this.borrowedBooks.length < 3) {
             if (checkForThsBookInTheList === false && chekForTheBookInBorrowList === false) {
                 this.borrowedBooks.push(bookToBorrow)
                 console.log(`I borrow a new book wich id is : ${bookToBorrow.id}`);
@@ -79,9 +97,6 @@ class User {
         return this.borrowedBooks
 
     }
-
-
-
 
     returnBook(bookForReturn) {
         let borrowedBookForReturn = this.checkIfThatBookIsInMyBorrowedList(bookForReturn)
@@ -103,7 +118,6 @@ class Library {
         this.landedBooks = []
     }
 
-
     searchBook(book) {
         let currentBook;
 
@@ -118,12 +132,19 @@ class Library {
         console.log(`Oops.. The book you are looking for is currently unavailable`)
         return currentBook
     }
+
     addBook(book) {
         this.libraryBooks.push(book)
     }
+
     getLibraryBooks() {
         console.log(this.libraryBooks);
     }
+
+    takingTheBookOffTheShelf() {
+
+    }
+
     lendBook(bookForLand) {
         let thisBookForLand = this.searchBook(bookForLand)
         if (bookForLand.id === thisBookForLand.id) {
@@ -146,6 +167,7 @@ class Library {
             console.log(thisBookForUpdate);
         }
     }
+
     deleteBook(bookForDelete) {
         let thisBookForDelete = this.searchBook(bookForDelete)
 
@@ -169,6 +191,7 @@ class Library {
         })
 
     }
+
     readBooksInStockInJSONfile() {
         const fs = require("fs");
         fs.readFile('booksInLibrary.json', function (err, data) {
@@ -190,18 +213,23 @@ class Librarian {
         this.customers = []
 
     }
+
     addWorkingPlace(library) {
         this.workSpaceLibrary.push(library)
     }
+
     getWorkSpaceLibrary() {
         console.log(this.workSpaceLibrary);
     }
+    
     openTheLibraryEntranceForCustomers(customer) {
         this.customers.push(customer)
     }
-    processedCustomer(){
+    
+    processedCustomer() {
         this.customers.shift()
     }
+
     processTheCustomerWhoseTurnCameFromTheQueue() {
         if (this.customers.length === 0) {
             console.log(`You served all the customers`);
@@ -209,23 +237,24 @@ class Librarian {
         }
         let currentCustomer = this.customers[0]
         return currentCustomer
-    
-
     }
 
     customerServiceForBorrowingABookFromTheLiibrary() {
+
         let customerInOrder = this.processTheCustomerWhoseTurnCameFromTheQueue()
-        console.log(`LOG FROM QUEUE`);
         let theBookTheCustomerWants = customerInOrder.askTheLibrarianForABook(books)
-        console.log(theBookTheCustomerWants);
-        this.workSpaceLibrary[0].lendBook(theBookTheCustomerWants)
-        console.log(this.workSpaceLibrary);
-        customerInOrder.borrowBook(theBookTheCustomerWants)
-        customerInOrder.getMyCurrentBorrowedBooksLis()
+        let ifTheCustomerTakeTheBookOrNot = customerInOrder.ifINoLongerOwnOrHaveReadThisBook(theBookTheCustomerWants)
+
+        if (ifTheCustomerTakeTheBookOrNot === true) {
+            this.workSpaceLibrary[0].lendBook(theBookTheCustomerWants)
+            console.log(this.workSpaceLibrary);
+            customerInOrder.borrowBook(theBookTheCustomerWants)
+            customerInOrder.getMyCurrentBorrowedBooksLis()
+        } else {
+            console.log(`The customer decided he didn't want this book.`);
+        }
     }
-
 }
-
 
 
 let book1 = new Book(1, "isbn23456", "Everyday Italian", "Giada De Laurentiis", "2005", 30.00)
@@ -246,9 +275,6 @@ let user1 = new User('Pesho')
 
 user1.addBooksInmyListOfBooks(book1)
 user1.addBooksInmyListOfBooks(book2)
-
-
-
 
 let user2 = new User('Gosho')
 user2.addBooksInmyListOfBooks(book3)
@@ -288,4 +314,10 @@ librarian1.openTheLibraryEntranceForCustomers(user1)
 librarian1.processTheCustomerWhoseTurnCameFromTheQueue()
 librarian1.customerServiceForBorrowingABookFromTheLiibrary()
 librarian1.customerServiceForBorrowingABookFromTheLiibrary()
-
+librarian1.customerServiceForBorrowingABookFromTheLiibrary()
+librarian1.customerServiceForBorrowingABookFromTheLiibrary()
+librarian1.customerServiceForBorrowingABookFromTheLiibrary()
+librarian1.customerServiceForBorrowingABookFromTheLiibrary()
+librarian1.customerServiceForBorrowingABookFromTheLiibrary()
+librarian1.customerServiceForBorrowingABookFromTheLiibrary()
+librarian1.customerServiceForBorrowingABookFromTheLiibrary()
