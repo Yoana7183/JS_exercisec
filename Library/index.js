@@ -238,7 +238,14 @@ class Librarian {
         let currentCustomer = this.customers[0]
         return currentCustomer
     }
-
+    completingTheOrderAndStartingWithTheNextCustomer(){
+        let currentCustomerInOrder = this.processTheCustomerWhoseTurnCameFromTheQueue()
+        if(currentCustomerInOrder.borrowedBooks.length ===3 ){
+        this.processedCustomer()
+        }
+           
+        
+    }
     customerServiceForBorrowingABookFromTheLiibrary() {
 
         let customerInOrder = this.processTheCustomerWhoseTurnCameFromTheQueue()
@@ -250,6 +257,7 @@ class Librarian {
             console.log(this.workSpaceLibrary);
             customerInOrder.borrowBook(theBookTheCustomerWants)
             customerInOrder.getMyCurrentBorrowedBooksLis()
+            this.completingTheOrderAndStartingWithTheNextCustomer()
         } else {
             console.log(`The customer decided he didn't want this book.`);
         }
@@ -269,23 +277,20 @@ let book9 = new Book(9, "isbn2345613148", " The Divine Comedy", "Dante Alighieri
 let book10 = new Book(10, "isbn2345613149", "The Brothers Karamazov ", "Fyodor Dostoyevsky", "2008", 29.00)
 const books = []
 books.push(book1, book2, book3, book4, book5, book6, book7, book8, book9, book10)
-console.log(`LOG FROM USER`);
 
 let user1 = new User('Pesho')
-
 user1.addBooksInmyListOfBooks(book1)
 user1.addBooksInmyListOfBooks(book2)
 
 let user2 = new User('Gosho')
 user2.addBooksInmyListOfBooks(book3)
+
 let user3 = new User('Ivan')
 user3.addBooksInmyListOfBooks(book2)
-
 // user1.borrowBook(book1)
 // user1.borrowBook(book4)
 // user1.borrowBook(book2)
 // user1.returnBook(book3)
-console.log(`LOG FROM LIBRARY`);
 let library = new Library("Ivan Vazov National Library")
 library.addBook(book1)
 library.addBook(book2)
@@ -297,7 +302,6 @@ library.addBook(book7)
 library.addBook(book8)
 library.addBook(book9)
 library.addBook(book10)
-
 // library.searchBook(book1)
 // library.lendBook(book2)
 // library.updateBook(book1)
@@ -306,11 +310,11 @@ library.addBook(book10)
 // library.writeBooksInStockInJSONfile()
 // library.readBooksInStockInJSONfile()
 
-console.log(`LOG FROM LIBRARIAN`);
 let librarian1 = new Librarian('Gosho')
 librarian1.addWorkingPlace(library)
-
 librarian1.openTheLibraryEntranceForCustomers(user1)
+librarian1.openTheLibraryEntranceForCustomers(user2)
+librarian1.openTheLibraryEntranceForCustomers(user3)
 librarian1.processTheCustomerWhoseTurnCameFromTheQueue()
 librarian1.customerServiceForBorrowingABookFromTheLiibrary()
 librarian1.customerServiceForBorrowingABookFromTheLiibrary()
