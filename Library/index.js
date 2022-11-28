@@ -14,6 +14,7 @@ class User {
         this.listOfBooks = []
         this.borrowedBooks = []
     }
+
     
     //add books in this.listOfBooks[] / personal list/ doesnt depend on borrowedBooks[]//
     addBooksInmyListOfBooks(book) {
