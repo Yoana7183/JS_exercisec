@@ -59,10 +59,12 @@ function compareSecondName(a, b) {
     return comparison;
 }
 
-
+function test(){
 console.log(`Sorted By Age`);
 console.log(personList.sort(compareAge));
 console.log(`Sorted By First Name`);
 console.log(personList.sort(compareName));
 console.log(`Sorted By Last Name`);
 console.log(personList.sort(compareSecondName));
+}
+test()
