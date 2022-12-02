@@ -26,8 +26,9 @@ class Manager {
         let vacationDays;
         for (let i = 0; i < this.listOfEmployee.length; i++) {
             vacationDays = this.listOfEmployee[i]
-            return vacationDays
+           
         }
+        return vacationDays
     }
 
     getAllVacationDays() {
@@ -173,13 +174,26 @@ let employee6 = new Employee('Mariq Petrova', 'mariq.petrova@test.com', '20', '2
 let employee7 = new Employee('Ivana Ivanova', 'ivana.ivanova@test.com', '30', '4000')
 let employee8 = new Employee('Marian Georgiev', 'marian.georgiev@test.com', '30', '4500')
 let employee9 = new Employee('Mladen Minchev', 'mladen.minchev@test.com', '30', '4100')
-let employee10 = new Employee('Parvan Ivanov', 'ivan.ivanov@test.com', '20', '2050')
+let employee10 = new Employee('Parvan Ivanov1', 'ivan.ivanov@test.com', '20', '2050')
+let employee11 = new Employee('Ivana Ivanova2', 'ivan.ivanov@test.com', '30', '2050')
+let employee12 = new Employee('Parvan Ivanov3', 'ivan.ivanov@test.com', '20', '2050')
+let employee13 = new Employee('Parvan Ivanov4', 'ivan.ivanov@test.com', '20', '2050')
+let employee14 = new Employee('Parvan Ivanov5', 'ivan.ivanov@test.com', '20', '2050')
+let employee15 = new Employee('Parvan Ivanov6', 'ivan.ivanov@test.com', '20', '2050')
+let employee16 = new Employee('Parvan Ivanov7', 'ivan.ivanov@test.com', '20', '2050')
+let employee17 = new Employee('Parvan Ivanov8', 'ivan.ivanov@test.com', '20', '2050')
+let employee18 = new Employee('Parvan Ivanov9', 'ivan.ivanov@test.com', '20', '2050')
+let employee19 = new Employee('Parvan Ivanov10', 'ivan.ivanov@test.com', '20', '2050')
+let employee20 = new Employee('Parvan Ivanov11', 'ivan.ivanov@test.com', '20', '2050')
 
 let manager1 = new Manager('Rumen Zachinski')
-manager1.addEmployee(employee1, employee2, employee3, employee4, employee5)
+manager1.addEmployee(employee1, employee2, employee3, employee4, employee5,employee11)
 
 let manager2 = new Manager('Rumiana Simeonova')
-manager2.addEmployee(employee6, employee7, employee8, employee9, employee10)
+manager2.addEmployee(employee6, employee7, employee8, employee9, employee10,)
+
+let manager3 = new Manager('Kamelia Ognianova')
+manager3.addEmployee(employee12,employee13,employee14,employee15,employee16)
 
 let department1 = new Department('Sale Department')
 department1.addManagerAndTeam(manager1)
@@ -187,13 +201,19 @@ department1.addManagerAndTeam(manager1)
 let department2 = new Department('Marketing Department')
 department2.addManagerAndTeam(manager2)
 
+let department3 = new Department ('Technical Support Department')
+department3.addManagerAndTeam(manager3)
+
 let report = new Reports()
 report.addDepartment(department1)
 report.addDepartment(department2)
+report.addDepartment(department3)
 report.displayManagerNameByDepartment('Marketing Department')
 report.calculateTheSumOfVacationDaysForAllEmployeesInADepartment('Marketing Department')
+report.calculateTheSumOfVacationDaysForAllEmployeesInADepartment('Technical Support Department')
 report.calculateTheSumOfVacationDaysForAllEmployeesInADepartment('Sale Department')
 report.displayCalculatedSumOfTaxesByDepartment('Marketing Department')
 report.displayCalculatedSumOfTaxesByDepartment('Sale Department')
+report.displayCalculatedSumOfTaxesByDepartment('Technical Support Department')
 report.calculateTheSumOfAllTaxesInCompany()
 
