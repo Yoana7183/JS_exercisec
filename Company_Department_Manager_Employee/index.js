@@ -12,7 +12,6 @@ class Manager {
         this.listOfEmployee = []
     }
     getManagerName() {
-        console.log(this.name);
         return this.name
     }
     addEmployee(...employee) {
@@ -50,9 +49,31 @@ class Manager {
             sumUp += parseInt(allStaffVacationDate[i])
 
         }
-        console.log(`After the audit, the manager name: ${this.name} reports a total of ${sumUp} days of have left to all employees in his team`);
+
         return sumUp
     }
+    defineEmployeeFee() {
+        let employeeData = this.getAllEmployeesData()
+        let salary = 0
+        let days = 0
+        let tax = 0
+        let departmentTax = 0
+        for (let i = 0; i < employeeData.length; i++) {
+            days = employeeData[i].vacationDays
+            salary = employeeData[i].salary
+            if (days === '20') {
+                tax = (10 / 100) * salary
+                departmentTax += tax
+            } if (days === '30') {
+                tax = (20 / 100) * salary
+                departmentTax += tax
+            }
+
+        }
+
+        return departmentTax
+    }
+
 
 }
 
@@ -73,7 +94,7 @@ class Department {
             for (let i = 0; i < this.departmentManagerAndEmployees.length; i++) {
                 nameOfManager = this.departmentManagerAndEmployees[i]
             }
-            console.log(nameOfManager.name);
+
 
         }
         return nameOfManager
@@ -91,18 +112,17 @@ class Reports {
     getListOfDepartments() {
         console.log(this.departmens);
     }
-    getManagerNameByDepartmentName(departmentName) {
+    foundManagerByDEPARTMENTname(departmentName) {
+        let managerName;
         let nameOfCurrentDepartment;
         let isFound = false
         for (let i = 0; i < this.departmens.length; i++) {
             nameOfCurrentDepartment = this.departmens[i]
 
             if (nameOfCurrentDepartment.name == departmentName) {
-                console.log(`The manager of ${nameOfCurrentDepartment.name} is:`);
-                nameOfCurrentDepartment.getManagerName(nameOfCurrentDepartment.name)
-
+                managerName = nameOfCurrentDepartment.getManagerName(nameOfCurrentDepartment.name)
                 isFound = true
-                return nameOfCurrentDepartment
+                return managerName
             }
             if (isFound = false) {
                 return undefined
@@ -111,14 +131,22 @@ class Reports {
         }
         return nameOfCurrentDepartment
     }
+    displayManagerNameByDepartment(nameOfDepartment){
+        let manager = this.foundManagerByDEPARTMENTname(nameOfDepartment)
+        console.log(`Manager in ${nameOfDepartment} is ${manager.name}`);
+    }
+
     calculateTheSumOfVacationDaysForAllEmployeesInADepartment(nameOfDepartment) {
-        let foundedDepartment = this.getManagerNameByDepartmentName(nameOfDepartment)
-        let vacationDays=foundedDepartment.getManagerName(nameOfDepartment)
-       console.log(vacationDays.sumOfAllVacationDays());
+        let foundedDepartment = this.foundManagerByDEPARTMENTname(nameOfDepartment)
+        console.log(`After the audit, the manager name: ${foundedDepartment.name} reports a total of ${foundedDepartment.sumOfAllVacationDays()} days of have left to all employees in his team`);
 
     }
-    calculateTheSumOfTheTaxesForAllEmployeeInADepartment(nameOfDepartment){
-        
+    calculateTheSumOfTheTaxesForAllEmployeeInADepartment(nameOfDepartment) {
+        let foundedDepartment = this.foundManagerByDEPARTMENTname(nameOfDepartment)
+        console.log(`The total amount of all taxes in ${nameOfDepartment} is ${foundedDepartment.defineEmployeeFee()} BGN `);
+    }
+    calculateTheSumOfAllTaxesInCompany(){
+
     }
 }
 let employee1 = new Employee('Ivan Ivanov', 'ivan.ivanov@test.com', '30', '4000')
@@ -146,14 +174,12 @@ let department2 = new Department('Marketing Department')
 department2.addManagerAndTeam(manager2)
 
 
-
 let report = new Reports()
 report.addDepartment(department1)
 report.addDepartment(department2)
-report.getListOfDepartments()
-
-report.getManagerNameByDepartmentName('Marketing Department')
-
+report.displayManagerNameByDepartment('Marketing Department')
 report.calculateTheSumOfVacationDaysForAllEmployeesInADepartment('Marketing Department')
 report.calculateTheSumOfTheTaxesForAllEmployeeInADepartment('Marketing Department')
+report.calculateTheSumOfTheTaxesForAllEmployeeInADepartment('Sale Department')
+report.calculateTheSumOfAllTaxesInCompany()
 
