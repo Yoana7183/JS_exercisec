@@ -22,13 +22,16 @@ class Manager {
 
     }
     getAllEmployeesData() {
+
         let vacationDays;
         for (let i = 0; i < this.listOfEmployee.length; i++) {
             vacationDays = this.listOfEmployee[i]
             return vacationDays
         }
     }
+
     getAllVacationDays() {
+
         let dataOfEmployees = this.getAllEmployeesData()
         const vacancyDays = []
         dataOfEmployees.forEach(element => {
@@ -36,8 +39,8 @@ class Manager {
 
         });
         return vacancyDays
-
     }
+
     sumOfAllVacationDays() {
 
         let allStaffVacationDate = this.getAllVacationDays()
@@ -48,6 +51,7 @@ class Manager {
         }
         return sumUp
     }
+
     defineEmployeeFee() {
 
         let employeeData = this.getAllEmployeesData()
@@ -80,33 +84,34 @@ class Department {
     addManagerAndTeam(managerAndTeam) {
         this.departmentManagerAndEmployees.push(managerAndTeam)
     }
+
     getManagerAndTeamList() {
         console.log(this.departmentManagerAndEmployees);
     }
+
     getManagerName(departmentName) {
         let nameOfManager
         if (departmentName == this.name) {
             for (let i = 0; i < this.departmentManagerAndEmployees.length; i++) {
                 nameOfManager = this.departmentManagerAndEmployees[i]
             }
-
-
         }
         return nameOfManager
     }
-
-
 }
 class Reports {
     constructor() {
         this.departmens = []
     }
+
     addDepartment(department) {
         this.departmens.push(department)
     }
+
     getListOfDepartments() {
         console.log(this.departmens);
     }
+
     foundManagerByDEPARTMENTname(departmentName) {
         let managerName;
         let nameOfCurrentDepartment;
@@ -122,10 +127,10 @@ class Reports {
             if (isFound = false) {
                 return undefined
             }
-
         }
         return nameOfCurrentDepartment
     }
+
     displayManagerNameByDepartment(nameOfDepartment){
         let manager = this.foundManagerByDEPARTMENTname(nameOfDepartment)
         console.log(`Manager in ${nameOfDepartment} is ${manager.name}`);
@@ -136,27 +141,29 @@ class Reports {
         console.log(`After the audit, the manager name: ${foundedDepartment.name} reports a total of ${foundedDepartment.sumOfAllVacationDays()} days of have left to all employees in his team`);
 
     }
+
     calculateTheSumOfTheTaxesForAllEmployeeInADepartment(nameOfDepartment) {
         let foundedDepartment = this.foundManagerByDEPARTMENTname(nameOfDepartment)
         let fee = foundedDepartment.defineEmployeeFee()
         return fee
-       
     }
+
     displayCalculatedSumOfTaxesByDepartment(nameOfDepartment){
         let tax = this.calculateTheSumOfTheTaxesForAllEmployeeInADepartment(nameOfDepartment)
         console.log(`The total amount of all taxes in ${nameOfDepartment} is ${tax} BGN `);
     }
+
     calculateTheSumOfAllTaxesInCompany(){
         let departmentsNames;
         let allTaxes = 0
     for(let i=0;i<this.departmens.length;i++){
         departmentsNames = this.departmens[i].name
-        allTaxes += this.calculateTheSumOfTheTaxesForAllEmployeeInADepartment(departmentsNames)
-        
+        allTaxes += this.calculateTheSumOfTheTaxesForAllEmployeeInADepartment(departmentsNames) 
     }
     console.log(`Аll fees for the whole company are worth ${allTaxes}`);
     }
 }
+
 let employee1 = new Employee('Ivan Ivanov', 'ivan.ivanov@test.com', '30', '4000')
 let employee2 = new Employee('Dragan Petkov', 'dragan.petkov@test.com', '20', '2000')
 let employee3 = new Employee('Yordan Ivanov', 'yordan.ivanov@test.com', '30', '4200')
@@ -171,7 +178,6 @@ let employee10 = new Employee('Parvan Ivanov', 'ivan.ivanov@test.com', '20', '20
 let manager1 = new Manager('Rumen Zachinski')
 manager1.addEmployee(employee1, employee2, employee3, employee4, employee5)
 
-
 let manager2 = new Manager('Rumiana Simeonova')
 manager2.addEmployee(employee6, employee7, employee8, employee9, employee10)
 
@@ -180,7 +186,6 @@ department1.addManagerAndTeam(manager1)
 
 let department2 = new Department('Marketing Department')
 department2.addManagerAndTeam(manager2)
-
 
 let report = new Reports()
 report.addDepartment(department1)
