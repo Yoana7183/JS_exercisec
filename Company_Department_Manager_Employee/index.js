@@ -161,7 +161,7 @@ class Reports {
         departmentsNames = this.departmens[i].name
         allTaxes += this.calculateTheSumOfTheTaxesForAllEmployeeInADepartment(departmentsNames) 
     }
-    console.log(`Аll fees for the whole company are worth ${allTaxes}`);
+    console.log(`Аll fees for the whole company are worth ${allTaxes} BGN`);
     }
 }
 
@@ -209,7 +209,7 @@ report.displayCalculatedSumOfTaxesByDepartment('Sale Department')
 report.displayCalculatedSumOfTaxesByDepartment('Technical Support Department')
 report.calculateTheSumOfAllTaxesInCompany()
 
-// result in console:
+// Output in console:
 /*Manager in Marketing Department is Dragan Petkov
 After the audit, the manager name: Dragan Petkov reports a total of days of 100  have left to all employees in his team
 After the audit, the manager name: Yordan Ivanov reports a total of days of 110  have left to all employees in his team
@@ -217,4 +217,4 @@ After the audit, the manager name: Ivan Ivanov reports a total of days of 120  h
 The total amount of all taxes in Marketing Department is 2090 BGN 
 The total amount of all taxes in Sale Department is 1031 BGN
 The total amount of all taxes in Technical Support Department is 826 BGN 
-Аll fees for the whole company are worth 3947*/
+Аll fees for the whole company are worth 3947 BGN*/
