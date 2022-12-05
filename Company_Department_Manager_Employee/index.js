@@ -6,53 +6,74 @@ class Employee {
         this.salary = salary
     }
 }
-class Manager {
-    constructor(name) {
+
+class Department {
+    constructor(name, manager) {
+        this.manager = manager
         this.name = name
-        this.listOfEmployee = []
+        this.employees = []
     }
+//add employees in department
+    addTeam(...employee) {
+        this.employees.push(employee)
+    }
+
+    getTeam() {
+        console.log(this.employees);
+    }
+//get manager of this department
     getManagerName() {
-        return this.name
-    }
-    addEmployee(...employee) {
-        this.listOfEmployee.push(employee)
-    }
-    getList() {
-        console.log(this.listOfEmployee);
+        console.log(this.manager.name);
 
     }
+    // loop into all employees
     getAllEmployeesData() {
+        let currentEmployeeData;
 
-        let vacationDays;
-        for (let i = 0; i < this.listOfEmployee.length; i++) {
-            vacationDays = this.listOfEmployee[i]
-           
+        for (let i = 0; i < this.employees.length; i++) {
+            currentEmployeeData = this.employees[i]
         }
-        return vacationDays
-    }
 
-    getAllVacationDays() {
+        return currentEmployeeData
+    };
+    // add all vacantion days of staff into array for easy use in another methoods
 
-        let dataOfEmployees = this.getAllEmployeesData()
+    getAllStaffVacationDays() {
+        let employeesData = this.getAllEmployeesData()
+
         const vacancyDays = []
-        dataOfEmployees.forEach(element => {
+        employeesData.forEach(element => {
             vacancyDays.push(element.vacationDays)
 
         });
+        // add manager days in array of staff vacation days
+        vacancyDays.push(this.manager.vacationDays)
         return vacancyDays
-    }
 
+    }
+// sum up all employee vacation days in department
     sumOfAllVacationDays() {
 
-        let allStaffVacationDate = this.getAllVacationDays()
+        let allStaffVacationDate = this.getAllStaffVacationDays()
         let sumUp = 0
 
         for (let i = 0; i < allStaffVacationDate.length; i++) {
             sumUp += parseInt(allStaffVacationDate[i])
+
         }
         return sumUp
     }
-
+    // separate calc on manager tax 
+    calculateManagerFee() {
+        let tax = 0
+        if (this.manager.vacationDays === '20') {
+            tax = (10 / 100) * this.manager.salary
+        } if (this.manager.vacationDays === '30') {
+            tax = (20 / 100) * this.manager.vacationDays
+        }
+        return tax
+    }
+    // calc employee tax
     defineEmployeeFee() {
 
         let employeeData = this.getAllEmployeesData()
@@ -60,6 +81,7 @@ class Manager {
         let days = 0
         let tax = 0
         let departmentTax = 0
+        let managerTax = this.calculateManagerFee()
 
         for (let i = 0; i < employeeData.length; i++) {
             days = employeeData[i].vacationDays
@@ -73,38 +95,16 @@ class Manager {
                 departmentTax += tax
             }
         }
+        departmentTax = departmentTax + managerTax
+
         return departmentTax
-    }
-}
-class Department {
-    constructor(name) {
-        this.name = name
-        this.departmentManagerAndEmployees = []
-    }
-
-    addManagerAndTeam(managerAndTeam) {
-        this.departmentManagerAndEmployees.push(managerAndTeam)
-    }
-
-    getManagerAndTeamList() {
-        console.log(this.departmentManagerAndEmployees);
-    }
-
-    getManagerName(departmentName) {
-        let nameOfManager
-        if (departmentName == this.name) {
-            for (let i = 0; i < this.departmentManagerAndEmployees.length; i++) {
-                nameOfManager = this.departmentManagerAndEmployees[i]
-            }
-        }
-        return nameOfManager
     }
 }
 class Reports {
     constructor() {
         this.departmens = []
     }
-
+// add department
     addDepartment(department) {
         this.departmens.push(department)
     }
@@ -112,43 +112,42 @@ class Reports {
     getListOfDepartments() {
         console.log(this.departmens);
     }
-
-    foundManagerByDEPARTMENTname(departmentName) {
-        let managerName;
+// get department data by name
+    getDepartmentDataByDepertmentName(departmentName) {
         let nameOfCurrentDepartment;
         let isFound = false
         for (let i = 0; i < this.departmens.length; i++) {
             nameOfCurrentDepartment = this.departmens[i]
 
             if (nameOfCurrentDepartment.name == departmentName) {
-                managerName = nameOfCurrentDepartment.getManagerName(nameOfCurrentDepartment.name)
                 isFound = true
-                return managerName
+                return nameOfCurrentDepartment
             }
-            if (isFound = false) {
-                return undefined
-            }
-        }
-        return nameOfCurrentDepartment
-    }
 
-    displayManagerNameByDepartment(nameOfDepartment){
-        let manager = this.foundManagerByDEPARTMENTname(nameOfDepartment)
-        console.log(`Manager in ${nameOfDepartment} is ${manager.name}`);
+        }
+        if (isFound == false) {
+            return undefined
+        }
+
+    }
+    //get manager name by department name
+    getMANAGERnameByDepartmentName(departmentName) {
+        let currentDepartment = this.getDepartmentDataByDepertmentName(departmentName)
+        console.log(`Manager in ${currentDepartment.name} is ${currentDepartment.manager.name}`);
+
     }
 
     calculateTheSumOfVacationDaysForAllEmployeesInADepartment(nameOfDepartment) {
-        let foundedDepartment = this.foundManagerByDEPARTMENTname(nameOfDepartment)
-        console.log(`After the audit, the manager name: ${foundedDepartment.name} reports a total of ${foundedDepartment.sumOfAllVacationDays()} days of have left to all employees in his team`);
-
+        let foundedDepartment = this.getDepartmentDataByDepertmentName(nameOfDepartment)
+        console.log(`After the audit, the manager name: ${foundedDepartment.manager.name} reports a total of days of ${foundedDepartment.sumOfAllVacationDays()}  have left to all employees in his team`);
     }
 
     calculateTheSumOfTheTaxesForAllEmployeeInADepartment(nameOfDepartment) {
-        let foundedDepartment = this.foundManagerByDEPARTMENTname(nameOfDepartment)
+        let foundedDepartment = this.getDepartmentDataByDepertmentName(nameOfDepartment)
         let fee = foundedDepartment.defineEmployeeFee()
         return fee
     }
-
+// only display calculation
     displayCalculatedSumOfTaxesByDepartment(nameOfDepartment){
         let tax = this.calculateTheSumOfTheTaxesForAllEmployeeInADepartment(nameOfDepartment)
         console.log(`The total amount of all taxes in ${nameOfDepartment} is ${tax} BGN `);
@@ -186,29 +185,21 @@ let employee18 = new Employee('Parvan Ivanov9', 'ivan.ivanov@test.com', '20', '2
 let employee19 = new Employee('Parvan Ivanov10', 'ivan.ivanov@test.com', '20', '2050')
 let employee20 = new Employee('Parvan Ivanov11', 'ivan.ivanov@test.com', '20', '2050')
 
-let manager1 = new Manager('Rumen Zachinski')
-manager1.addEmployee(employee1, employee2, employee3, employee4, employee5,employee11)
 
-let manager2 = new Manager('Rumiana Simeonova')
-manager2.addEmployee(employee6, employee7, employee8, employee9, employee10,)
+let department1 = new Department('Sale Department', employee1)
+department1.addTeam(employee10, employee11, employee13, employee12)
 
-let manager3 = new Manager('Kamelia Ognianova')
-manager3.addEmployee(employee12,employee13,employee14,employee15,employee16)
+let department2 = new Department('Marketing Department', employee2)
+department2.addTeam(employee5, employee6, employee7)
 
-let department1 = new Department('Sale Department')
-department1.addManagerAndTeam(manager1)
-
-let department2 = new Department('Marketing Department')
-department2.addManagerAndTeam(manager2)
-
-let department3 = new Department ('Technical Support Department')
-department3.addManagerAndTeam(manager3)
+let department3 = new Department('Technical Support Department', employee3)
+department3.addTeam(employee14, employee15, employee16, employee17)
 
 let report = new Reports()
 report.addDepartment(department1)
 report.addDepartment(department2)
 report.addDepartment(department3)
-report.displayManagerNameByDepartment('Marketing Department')
+report.getMANAGERnameByDepartmentName('Marketing Department')
 report.calculateTheSumOfVacationDaysForAllEmployeesInADepartment('Marketing Department')
 report.calculateTheSumOfVacationDaysForAllEmployeesInADepartment('Technical Support Department')
 report.calculateTheSumOfVacationDaysForAllEmployeesInADepartment('Sale Department')
@@ -217,3 +208,12 @@ report.displayCalculatedSumOfTaxesByDepartment('Sale Department')
 report.displayCalculatedSumOfTaxesByDepartment('Technical Support Department')
 report.calculateTheSumOfAllTaxesInCompany()
 
+// result in console:
+/*Manager in Marketing Department is Dragan Petkov
+After the audit, the manager name: Dragan Petkov reports a total of days of 100  have left to all employees in his team
+After the audit, the manager name: Yordan Ivanov reports a total of days of 110  have left to all employees in his team
+After the audit, the manager name: Ivan Ivanov reports a total of days of 120  have left to all employees in his team  
+The total amount of all taxes in Marketing Department is 2090 BGN 
+The total amount of all taxes in Sale Department is 1031 BGN
+The total amount of all taxes in Technical Support Department is 826 BGN 
+Аll fees for the whole company are worth 3947*/
