@@ -48,6 +48,7 @@ class User {
 
     askTheLibrarianForABook() {
         const freeBook = books.filter(id => !this.listOfBooks.includes(id))
+
         return freeBook
     }
 
@@ -57,14 +58,17 @@ class User {
     borrowBook(bookToBorrow) {
         if (this.checkIfTheBookIsAlreadyInMyList(bookToBorrow) === true) {
             return 0
-
         }
 
-        bookToBorrow.isBorrowed = true
+        // there is a problem, after all checks still has a bug with status isBorrowed=true, cant find the reason why change the status in my first added books
+        // wich need to stay isBorrowed=false  , but smth went wrong and the status changes without any reason, bc the checks for duplicate works..
         this.listOfBooks.push(bookToBorrow)
+        bookToBorrow.isBorrowed = true
 
 
-        this.printClientListLength()
+        if (this.getMyListOfBooks().length === 5) {
+            console.log(`You reach your limit for borrowed books`);
+        }
 
     }
     //function which returns the given book after all checks
@@ -221,7 +225,6 @@ class Librarian {
         this.customers.push(customer)
     }
 
-    // dequeue
 
     // check the length of customer queue and return current customer 
     processTheCustomerWhoseTurnCameFromTheQueue() {
@@ -232,20 +235,19 @@ class Librarian {
         let currentCustomer = this.customers[0]
         return currentCustomer
     }
-
-    // check if the customer is reach the limit of borrowed books and if is it then finish his/her service and invite the next customer
+    //dequeue
     inviteNextCustomer() {
 
         this.customers.shift()
 
     }
+    // check if the customer is reach the limit of borrowed books and if is it then finish his/her service and invite the next customer
     checkIfCustomerReachBooksLimit(customer) {
 
         if (customer.listOfBooks.length === 5) {
             this.inviteNextCustomer()
         }
-        console.log(`CUSTOMERS LIST LENGTH`);
-        console.log(this.customers.length);
+
 
     }
     //get current customer and call customer funk askTheLibrarianForABook wich will compare my customer 
@@ -253,12 +255,26 @@ class Librarian {
     // no duplicates
     getRandomBook(cust) {
         let freeBook = cust.askTheLibrarianForABook()
-        const wantedBook = freeBook[Math.floor(Math.random() * freeBook.length)]
-        return wantedBook
+
+        for (let i = 0; i < freeBook.length; i++) {
+            if (cust.checkIfTheBookIsAlreadyInMyList(freeBook[i]) === true) {
+                return undefined
+            }
+            else {
+                const wantedBook = freeBook[Math.floor(Math.random() * freeBook.length)]
+                return wantedBook
+            }
+        }
+
+
     }
-    //the final function Library side: which after all checks takes the book out of the libraryBooks[], puts it in the landedBooks[] of the library.
-    // On the user's side: it checks how many books he has so far and if he has not reached his limit or has not read or owned this book he gives it to him in the borrowedBooks[]
-    //after that invites another customer of the queue
+    // final function : 
+    //1. getting first customer in customers queue
+    //2. check if the queue is empty
+    //3. get random book -  where have a problem
+    //4. land book function -  finds wanted book and delete it in library list of books
+    //5. borrow book function - get curr book and add the book in customer list of books and chage the status isBorrowed = true
+    //6. check if customer has more than limit books and if it is - invite next customer in order
     customerServiceForBorrowingABookFromTheLiibrary() {
 
         let customerInOrder = this.processTheCustomerWhoseTurnCameFromTheQueue()
@@ -275,8 +291,7 @@ class Librarian {
         return customerInOrder.name
     }
 
-
-    // get customer first borrowed book in this.borrowedBooks[] , splice the book from this.borrowedBooks[] and add the book in this.libraryList[] from library
+    //
     customerServiceReturningABorrowedBook(customer) {
 
         if (customer.listOfBooks.length === 0) {
@@ -329,14 +344,14 @@ user1.addBooksInmyListOfBooks(book2)
 
 
 let user2 = new User('Gosho')
-user2.addBooksInmyListOfBooks(book1)
-user2.addBooksInmyListOfBooks(book2)
+user2.addBooksInmyListOfBooks(book10)
+user2.addBooksInmyListOfBooks(book13)
 
 
 
 let user3 = new User('Ivan')
-user3.addBooksInmyListOfBooks(book1)
-user3.addBooksInmyListOfBooks(book2)
+user3.addBooksInmyListOfBooks(book14)
+user3.addBooksInmyListOfBooks(book12)
 
 
 // create a Library 
@@ -356,7 +371,7 @@ librarian1.addWorkingPlace(library)
 //add customers in library
 librarian1.openTheLibraryEntranceForCustomers(user1)
 librarian1.openTheLibraryEntranceForCustomers(user2)
-librarian1.openTheLibraryEntranceForCustomers(user3)
+// librarian1.openTheLibraryEntranceForCustomers(user3)
 
 //process customers in queue order
 // console.log(` Customer in Queue : ${librarian1.processTheCustomerWhoseTurnCameFromTheQueue().name}`);
@@ -368,28 +383,19 @@ console.log(`Customer name: : ${librarian1.customerServiceForBorrowingABookFromT
 console.log(`Customer name: : ${librarian1.customerServiceForBorrowingABookFromTheLiibrary()}`);
 console.log(`Customer name: : ${librarian1.customerServiceForBorrowingABookFromTheLiibrary()}`);
 console.log(`Customer name: : ${librarian1.customerServiceForBorrowingABookFromTheLiibrary()}`);
+console.log(`Customer name: : ${librarian1.customerServiceForBorrowingABookFromTheLiibrary()}`);
+console.log(`Customer name: : ${librarian1.customerServiceForBorrowingABookFromTheLiibrary()}`);
+console.log(`Customer name: : ${librarian1.customerServiceForBorrowingABookFromTheLiibrary()}`);
+console.log(`Customer name: : ${librarian1.customerServiceForBorrowingABookFromTheLiibrary()}`);
+console.log(`Customer name: : ${librarian1.customerServiceForBorrowingABookFromTheLiibrary()}`);
 
-console.log(`userLIST:`);
+
 
 console.log(user1.getMyListOfBooks());
 
 
-
-
-
-
-
-// librarian1.customerServiceForBorrowingABookFromTheLiibrary()
-// librarian1.customerServiceForBorrowingABookFromTheLiibrary()
-// librarian1.customerServiceForBorrowingABookFromTheLiibrary()
-// librarian1.customerServiceForBorrowingABookFromTheLiibrary()
-// librarian1.customerServiceForBorrowingABookFromTheLiibrary()
-// librarian1.customerServiceForBorrowingABookFromTheLiibrary()
-// librarian1.customerServiceForBorrowingABookFromTheLiibrary()
-// librarian1.customerServiceForBorrowingABookFromTheLiibrary()
-
 //get selected book from user and return it to the library
-// librarian1.customerServiceReturningABorrowedBook(user1)
+// console.log(`${librarian1.customerServiceReturningABorrowedBook(user1)}`);
 // librarian1.customerServiceReturningABorrowedBook(user1)
 // librarian1.customerServiceReturningABorrowedBook(user1)
 // librarian1.customerServiceReturningABorrowedBook(user2)
