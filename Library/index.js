@@ -1,3 +1,4 @@
+"use strict";
 class Book {
     constructor(id, ISBN, title, author, publishedYear, price) {
         this.id = id
@@ -15,8 +16,10 @@ class User {
 
     }
 
-
-    //add books in this.listOfBooks[] / personal list/ doesnt depend on borrowedBooks[]//
+    printClientListLength() {
+        console.log(this.listOfBooks.length);
+    }
+    //add books in this.listOfBooks[] / personal list
     addBooksInmyListOfBooks(book) {
         this.listOfBooks.push(book)
     }
@@ -25,10 +28,6 @@ class User {
         return this.listOfBooks
     }
 
-    getMyCurrentBorrowedBooksLis() {
-
-        return this.borrowedBooks
-    }
 
     // check if this book is contain in this.listOfBooks[] the func return true = contains / false = doesnt contain
     checkIfTheBookIsAlreadyInMyList(bookForCheck) {
@@ -45,12 +44,14 @@ class User {
 
 
     //function wich will compare my list of books and arr books and return another array wich contain only diffrence
-    // DOESNT WORK
-    askTheLibrarianForABook() {
-    let freeBook = books.filter(id=>!this.listOfBooks.includes(id))
-     let wantedBook = freeBook[Math.floor(Math.random()*freeBook.length)]
 
-     return wantedBook
+    askTheLibrarianForABook() {
+        const freeBook = books.filter(id => !this.listOfBooks.includes(id))
+        console.log(`filtered BOOKS`);
+       console.log(freeBook.length);
+        const wantedBook = freeBook[Math.floor(Math.random() * freeBook.length)]
+
+        return wantedBook
     }
 
 
@@ -58,7 +59,10 @@ class User {
     //function which adds the given book after all checks
     borrowBook(bookToBorrow) {
 
-        this.listOfBooks.push(bookToBorrow)
+
+        this.addBooksInmyListOfBooks(bookToBorrow)
+        this.printClientListLength()
+
     }
     //function which returns the given book after all checks
     returnBook(bookForReturn) {
@@ -97,21 +101,21 @@ class Library {
     }
     searchBook(bookToSearch) {
         let currentBook;
-        console.log(bookToSearch);
+
         for (let i = 0; i < this.libraryBooks.length; i++) {
             currentBook = this.libraryBooks[i]
-            for (let j = 0; j < currentBook.length; j++) {
-                if (currentBook[j].id == book.id) {
-                     return currentBook
-                }
+            if (currentBook.id == bookToSearch.id) {
+
+                return currentBook
+
 
             }
         }
-        return currentBook
+        return undefined
     }
     // console.log library list
     getLibraryBooks() {
-        return this.libraryBooks
+        return this.libraryBooks.length
     }
 
     // final function that takes the selected book out of the this.libraryBooks[] and moves it to the this.landedBooks[]
@@ -120,13 +124,14 @@ class Library {
         let thisBookForLand = this.searchBook(bookForLand)
         console.log(`BOOK LAND`);
         console.log(thisBookForLand);
+        if (thisBookForLand === undefined) {
+            return undefined
+        }
         if (bookForLand.id === thisBookForLand.id) {
             let index = this.libraryBooks.indexOf(thisBookForLand)
             this.libraryBooks.splice(index, 1)
+            console.log(this.libraryBooks.length);
 
-
-        } else {
-            return thisBookForLand
         }
     }
 
@@ -208,7 +213,7 @@ class Librarian {
     // show library
     getLibrary() {
 
-        return this.workSpaceLibrary.name
+        return this.workSpaceLibrary
 
     }
 
@@ -218,15 +223,12 @@ class Librarian {
     }
 
     // dequeue
-    processedCustomer() {
-        this.customers.shift()
-    }
 
     // check the length of customer queue and return current customer 
     processTheCustomerWhoseTurnCameFromTheQueue() {
 
         if (this.customers.length === 0) {
-            return 0
+            return undefined
         }
         let currentCustomer = this.customers[0]
         return currentCustomer
@@ -234,26 +236,37 @@ class Librarian {
 
     // check if the customer is reach the limit of borrowed books and if is it then finish his/her service and invite the next customer
     inviteNextCustomer() {
-       
-           return this.processedCustomer()
-        
-    }
 
+        return this.customers.shift()
+
+    }
+    checkIfCustomerReachBooksLimit(customer) {
+
+        if (customer.listOfBooks.length === 5) {
+            console.log(`users list length`);
+            console.log(customer.listOfBooks.length);
+            this.inviteNextCustomer()
+        }
+
+
+    }
     //the final function Library side: which after all checks takes the book out of the libraryBooks[], puts it in the landedBooks[] of the library.
     // On the user's side: it checks how many books he has so far and if he has not reached his limit or has not read or owned this book he gives it to him in the borrowedBooks[]
     //after that invites another customer of the queue
     customerServiceForBorrowingABookFromTheLiibrary() {
 
         let customerInOrder = this.processTheCustomerWhoseTurnCameFromTheQueue()
-        let theBookTheCustomerWants = customerInOrder.askTheLibrarianForABook(books)
-        console.log(theBookTheCustomerWants);
+        console.log(customerInOrder);
+
+
+        let theBookTheCustomerWants = customerInOrder.askTheLibrarianForABook()
 
         this.workSpaceLibrary[0].lendBook(theBookTheCustomerWants)
 
         customerInOrder.borrowBook(theBookTheCustomerWants)
-        customerInOrder.getMyCurrentBorrowedBooksLis()
-        this.inviteNextCustomer()
-        return 1
+        this.checkIfCustomerReachBooksLimit(customerInOrder)
+
+        return theBookTheCustomerWants
     }
 
 
@@ -310,28 +323,25 @@ books.push(book1, book2, book3, book4, book5, book6, book7, book8, book9, book10
 let user1 = new User('Pesho')
 user1.addBooksInmyListOfBooks(book1)
 user1.addBooksInmyListOfBooks(book2)
-user1.addBooksInmyListOfBooks(book11)
-user1.addBooksInmyListOfBooks(book12)
-user1.addBooksInmyListOfBooks(book13)
-user1.addBooksInmyListOfBooks(book14)
+
 
 let user2 = new User('Gosho')
 user2.addBooksInmyListOfBooks(book3)
 user2.addBooksInmyListOfBooks(book14)
-user2.addBooksInmyListOfBooks(book15)
-user2.addBooksInmyListOfBooks(book10)
+
+
 
 let user3 = new User('Ivan')
 user3.addBooksInmyListOfBooks(book14)
 user3.addBooksInmyListOfBooks(book12)
-user3.addBooksInmyListOfBooks(book13)
+
 
 // create a Library 
 let library = new Library("Ivan Vazov National Library")
 
 // Add some books in library
 library.addBook(books)
-library.searchBook(book10)
+
 
 
 // create librarian
@@ -346,10 +356,17 @@ librarian1.openTheLibraryEntranceForCustomers(user2)
 librarian1.openTheLibraryEntranceForCustomers(user3)
 
 //process customers in queue order
-console.log(` Customer in Queue : ${librarian1.processTheCustomerWhoseTurnCameFromTheQueue().name}`);
+// console.log(` Customer in Queue : ${librarian1.processTheCustomerWhoseTurnCameFromTheQueue().name}`);
 
 // get chosen book from customers / find this book in library and gave it to the customer
 console.log(`Library : ${librarian1.customerServiceForBorrowingABookFromTheLiibrary()}`);
+console.log(`Library : ${librarian1.customerServiceForBorrowingABookFromTheLiibrary()}`);
+console.log(`Library : ${librarian1.customerServiceForBorrowingABookFromTheLiibrary()}`);
+console.log(`Library : ${librarian1.customerServiceForBorrowingABookFromTheLiibrary()}`);
+console.log(`Library : ${librarian1.customerServiceForBorrowingABookFromTheLiibrary()}`);
+
+
+
 
 // librarian1.customerServiceForBorrowingABookFromTheLiibrary()
 // librarian1.customerServiceForBorrowingABookFromTheLiibrary()
