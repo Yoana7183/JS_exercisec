@@ -24,23 +24,23 @@ class Doctor {
         }
     }
     getPatientList() {
-     console.log(this.patientList);
+        console.log(this.patientList);
     }
 
-   removingThePatientFromDoctorsListAfterHospitalation(){
-    let patientFromPationList;
-    let deletedPation;
-    for(let i=0;i<this.patientList.length;i++){
-      patientFromPationList = this.patientList[i]
-      if(patientFromPationList.isHospitalized== true || patientFromPationList.isCured == true){
-        deletedPation = indexOf(patientFromPationList)
-        console.log(deletedPation);
-        this.patientList.splice(deletedPation,1)
-        this.getPatientList()
+    removingThePatientFromDoctorsListAfterHospitalation() {
+        let patientFromPationList;
+        let deletedPation;
+        for (let i = 0; i < this.patientList.length; i++) {
+            patientFromPationList = this.patientList[i]
+            if (patientFromPationList.isHospitalized == true || patientFromPationList.isCured == true) {
+                deletedPation = indexOf(patientFromPationList)
+                console.log(deletedPation);
+                this.patientList.splice(deletedPation, 1)
+                this.getPatientList()
 
-     }
+            }
+        }
     }
-   }
 }
 
 
@@ -91,9 +91,9 @@ class Room {
             console.log(allrooms);
 
         }
-     
+
     }
-    
+
 
 }
 class Department {
@@ -106,38 +106,38 @@ class Department {
         this.rooms.push(...room)
 
     }
- 
+
     findFreeRooom() {
         let room;
         for (let i = 0; i < this.rooms.length; i++) {
             room = this.rooms[i]
             if (room.isTheRoomOccupied === false) {
-                return room 
-            }else{
+                return room
+            } else {
                 console.log(`This room is already occupied`);
 
             }
 
         }
-       
+
 
     }
-    closeTheRoomIfIAllBedsAreOccupied(){
+    closeTheRoomIfIAllBedsAreOccupied() {
         let bedsInRoom
         for (let i = 0; i < this.rooms.length; i++) {
             bedsInRoom = this.rooms[i]
             console.log(`log from close room func`);
-           console.log(bedsInRoom);
-           bedsInRoom.showAllRoomsWithAllBeds()
-              if(bedsInRoom.length === 3){
-                bedsInRoom.isTheRoomOccupied= true
-              }
-            
+            console.log(bedsInRoom);
+            bedsInRoom.showAllRoomsWithAllBeds()
+            if (bedsInRoom.length === 3) {
+                bedsInRoom.isTheRoomOccupied = true
+            }
+
 
         }
     }
-    
- 
+
+
     hospitalisationOfAPatientInAHospital(patientsFromDoctorList) {
         let room = this.findFreeRooom()
         room.showAllRoomsWithAllBeds()
@@ -147,13 +147,13 @@ class Department {
 
         for (let a = 0; a < patientsFromDoctorList.length; a++) {
             currentPatient = patientsFromDoctorList[a]
-           
+
             currentPatient.isHospitalized = true
             console.log(currentPatient);
 
             for (let i = 0; i < room.room.length; i++) {
                 bedsInRoom = room.room[i];
-                       
+
                 let isPatientHospitalized = false
 
                 for (let j = 0; j < bedsInRoom.length; j++) {
@@ -165,7 +165,7 @@ class Department {
                         console.log(`Patient ${currentPatient.firstName} / age: ${currentPatient.age} in bed : ${thisBed.bedName} and room number: ${room.roomNumber} room status : ${thisBed.isTheRoomOccupied}`);
                         thisBed.addPatientToTheBed(currentPatient)
                         isPatientHospitalized = true
-                       this.closeTheRoomIfIAllBedsAreOccupied()
+                        this.closeTheRoomIfIAllBedsAreOccupied()
                         break;
 
                     }
@@ -179,7 +179,7 @@ class Department {
 
             }
             console.log(`CURRENT AVAILABLE BED IN ${thisBed.bedName}  :`);
-           
+
         }
 
     }
@@ -311,27 +311,27 @@ let patient10 = new Patient('Asen', 'Asenov', '18', '908979878', 'male')
 let room1 = new Room(1)
 room1.addBedToTheRoom(...beds)
 let room2 = new Room(2)
-room2.addBedToTheRoom(...beds)
-let room3 = new Room(3)
-room3.addBedToTheRoom(...beds)
-let room4 = new Room(4)
-room4.addBedToTheRoom(...beds)
-let room5 = new Room(5)
-room5.addBedToTheRoom(...beds)
-let room6 = new Room(6)
-room6.addBedToTheRoom(...beds)
-let room7 = new Room(7)
-room7.addBedToTheRoom(...beds)
-let room8 = new Room(8)
-room8.addBedToTheRoom(...beds)
-let room9 = new Room(9)
-room9.addBedToTheRoom(...beds)
-let room10 = new Room(10)
-room10.addBedToTheRoom(...beds)
+// room2.addBedToTheRoom(...beds)
+// let room3 = new Room(3)
+// room3.addBedToTheRoom(...beds)
+// let room4 = new Room(4)
+// room4.addBedToTheRoom(...beds)
+// let room5 = new Room(5)
+// room5.addBedToTheRoom(...beds)
+// let room6 = new Room(6)
+// room6.addBedToTheRoom(...beds)
+// let room7 = new Room(7)
+// room7.addBedToTheRoom(...beds)
+// let room8 = new Room(8)
+// room8.addBedToTheRoom(...beds)
+// let room9 = new Room(9)
+// room9.addBedToTheRoom(...beds)
+// let room10 = new Room(10)
+// room10.addBedToTheRoom(...beds)
 
 
 const rooms = []
-rooms.push(room1, room2, room3, room4, room5, room6, room7, room8, room9, room10)
+rooms.push(room1, room2)
 
 
 
