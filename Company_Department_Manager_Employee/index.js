@@ -24,7 +24,7 @@ class Department {
 
     }
     // loop into all employees
-    getAllEmployeesData() {
+    loopThroughAllEmployees() {
         let currentEmployeeData;
 
         for (let i = 0; i < this.employees.length; i++) {
@@ -36,7 +36,7 @@ class Department {
     // add all vacantion days of staff into array for easy use in another methoods
 
     getAllStaffVacationDays() {
-        let employeesData = this.getAllEmployeesData()
+        let employeesData = this.loopThroughAllEmployees()
 
         const vacancyDays = []
         employeesData.forEach(element => {
@@ -71,9 +71,9 @@ class Department {
         return tax
     }
     // calc employee tax
-    defineEmployeeFee() {
+    calculateEmployeeFees() {
 
-        let employeeData = this.getAllEmployeesData()
+        let employeeData = this.loopThroughAllEmployees()
         let salary = 0
         let days = 0
         let tax = 0
@@ -108,7 +108,7 @@ class Company {
     }
 
     getListOfDepartments() {
-        console.log(this.departmens);
+        return this.departmens
     }
     // get department data by name
     getDepartmentDataByDepertmentName(departmentName) {
@@ -123,33 +123,36 @@ class Company {
             }
 
         }
-        if (isFound == false) {
+        if (!isFound) {
             return undefined
         }
 
     }
     //get manager name by department name
-    getMANAGERnameByDepartmentName(departmentName) {
-        if (this.getDepartmentDataByDepertmentName(departmentName) == undefined) {
-            throw new Error ('Invalid Department name')
+    getManagerByDepartmentName(departmentName) {
+        let manager = this.getDepartmentDataByDepertmentName(departmentName)
+        if (manager == undefined) {
+            throw new Error('Invalid Department name')
         }
-        return this.getDepartmentDataByDepertmentName(departmentName).getManagerName()
+        return manager.getManagerName()
     }
 
     calculateTheSumOfVacationDaysForAllEmployeesInADepartment(nameOfDepartment) {
-        if (this.getDepartmentDataByDepertmentName(nameOfDepartment) == undefined) {
-            throw new Error ('Invalid Department name')
+        let departmentVacancyDays = this.getDepartmentDataByDepertmentName(nameOfDepartment)
+        if (departmentVacancyDays == undefined) {
+            throw new Error('Invalid Department name')
         }
-        let foundedDepartment = this.getDepartmentDataByDepertmentName(nameOfDepartment)
-        return foundedDepartment.sumOfAllVacationDays()
+
+        return departmentVacancyDays.sumOfAllVacationDays()
     }
 
     calculateTheSumOfTheTaxesForAllEmployeeInADepartment(nameOfDepartment) {
-        if (this.getDepartmentDataByDepertmentName(nameOfDepartment) == undefined) {
-            throw new Error ('Invalid Department name') 
+        let departmentTax = this.getDepartmentDataByDepertmentName(nameOfDepartment)
+        if (departmentTax == undefined) {
+            throw new Error('Invalid Department name')
         }
-        let foundedDepartment = this.getDepartmentDataByDepertmentName(nameOfDepartment)
-        return foundedDepartment.defineEmployeeFee()
+
+        return departmentTax.calculateEmployeeFees()
     }
 
     calculateTheSumOfAllTaxesInCompany() {
@@ -198,7 +201,10 @@ let company = new Company('Company')
 company.addDepartment(department1)
 company.addDepartment(department2)
 company.addDepartment(department3)
-console.log(`Manager name : ${company.getMANAGERnameByDepartmentName('Marketing Department')}`);
+
+let testFunc = function (){
+    try{
+console.log(`Manager name : ${company.getManagerByDepartmentName('Marketing Department')}`);
 console.log(`After the audit, a total of days of  ${company.calculateTheSumOfVacationDaysForAllEmployeesInADepartment('Marketing Department')} have left to all employees in team`);
 console.log(`After the audit, a total of days of  ${company.calculateTheSumOfVacationDaysForAllEmployeesInADepartment('Technical Support Department')} have left to all employees in team`);
 console.log(`After the audit, a total of days of  ${company.calculateTheSumOfVacationDaysForAllEmployeesInADepartment('Sale Department')} have left to all employees in team`);
@@ -206,8 +212,14 @@ console.log(`The total amount of all taxes is:${company.calculateTheSumOfTheTaxe
 console.log(`The total amount of all taxes is:${company.calculateTheSumOfTheTaxesForAllEmployeeInADepartment('Sale Department')} `);
 console.log(`The total amount of all taxes is:${company.calculateTheSumOfTheTaxesForAllEmployeeInADepartment('Technical Support Department')} `);
 console.log(`Аll fees for the whole company are worth : ${company.calculateTheSumOfAllTaxesInCompany()} BGN`);
-
-
+    }
+    catch(err){
+        console.log(err.name)
+        console.log(err.message);
+    }
+  
+}
+testFunc()
 // Output in console:
 /*Manager name : Dragan Petkov
 After the audit, a total of days of  100 have left to all employees in his team
@@ -216,4 +228,9 @@ After the audit, a total of days of  120 have left to all employees in his team
 The total amount of all taxes is:2090
 The total amount of all taxes is:1031
 The total amount of all taxes is:826
-Аll fees for the whole company are worth : 3947 BGN*/
+Аll fees for the whole company are worth : 3947 BGN
+If catch an err:
+Manager name : Dragan Petkov
+Error
+Invalid Department name
+*/
