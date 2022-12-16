@@ -270,12 +270,6 @@ class Librarian {
     // check if the customer is reach the limit of borrowed books and if is it then finish his/her service and invite the next customer
     checkIfCustomerIsReachBookLimit() {
 
-        try {
-            this.getTheCustomerWhoseTurnCameFromTheQueue()
-        } catch {
-            console.log(err.name);
-            console.log(err.mesage);
-        }
         let currentCustomerInOrder = this.getTheCustomerWhoseTurnCameFromTheQueue()
 
         if (currentCustomerInOrder.borrowedBooks.length <= 2) {
@@ -290,17 +284,17 @@ class Librarian {
     // On the user's side: it checks how many books he has so far and if he has not reached his limit or has not read or owned this book he gives it to him in the borrowedBooks[]
     //after that invites another customer of the queue
     finalFunction_customerServiceForBorrowingABookFromTheLiibrary() {
+        var customerInOrder;
+        var theBookTheCustomerWants;
 
         try {
-            this.getTheCustomerWhoseTurnCameFromTheQueue()
-        } catch(err) {
+            customerInOrder = this.getTheCustomerWhoseTurnCameFromTheQueue()
+            theBookTheCustomerWants = customerInOrder.pickARandomBook(books)
+        } catch (err) {
             console.log(err.name);
-            console.log(err.mesage);
+            console.log(err.message);
+            return ;
         }
-
-        let customerInOrder = this.getTheCustomerWhoseTurnCameFromTheQueue()
-
-        let theBookTheCustomerWants = customerInOrder.pickARandomBook(books)
 
         if (this.checkIfCustomerIsReachBookLimit()) {
             try {
@@ -367,12 +361,12 @@ class Librarian {
 
     displayResultOf_finalFunction_customerServiceDonationABook(customer) {
         let bookForDonation = this.finalFunction_customerServiceDonationABook(customer)
-        if(bookForDonation === undefined){
+        if (bookForDonation === undefined) {
             console.log(`Customer name: ${customer.name} has no more book for donation`)
-        }else{
+        } else {
             console.log(`Customer name: ${customer.name} donate book id: ${bookForDonation.id} / Title: "${bookForDonation.title}" / Athor: ${bookForDonation.author}`);
         }
-        
+
     }
 }
 
@@ -493,5 +487,4 @@ Customer name: Ivan / Wanted book = id: 14 / Title: "November 9: A Novel " / Aut
 Customer name: Ivan / Wanted book = id: 11 / Title: "The Light We Carry: Overcoming in Uncertai " / Author: Michelle Obama
 This book is alreary in one of your lists. Please try with another one!
 Customer name: Ivan has no more book for donation
-
 */
