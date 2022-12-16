@@ -91,8 +91,13 @@ class User {
     trackBooksWchAreLoggedInBorrowedList(bookToBorrow) {
 
         let currentListLength = this.borrowedBooks.length
-
-        this.borrowBook(bookToBorrow)
+        try {
+            this.borrowBook(bookToBorrow)
+        } catch (err) {
+            console.log(err.name);
+            console.log(err.mesage)
+        }
+        // this.borrowBook(bookToBorrow)
 
         let currentListLengthAfterRunBorrowFunc = this.borrowedBooks.length
 
@@ -140,9 +145,13 @@ class Library {
             if (currentBook.id === book.id) {
                 return currentBook
             }
+            else {
+                throw Error('Library: The book you looking for is currently not available')
+            }
         }
 
-        return undefined
+
+
     }
 
     //add book in library
@@ -153,10 +162,15 @@ class Library {
     // final function that takes the selected book out of the this.libraryBooks[] and moves it to the this.landedBooks[]
     lendBook(bookForLand) {
 
-        let thisBookForLand = this.searchBook(bookForLand)
-        if (thisBookForLand === undefined) {
-            throw Error('Library: The book you looking for is currently not available')
+
+        try {
+            this.searchBook(bookForLand)
+        } catch (err) {
+            console.log(err.name);
+            console.log(err.mesage);
         }
+
+        let thisBookForLand = this.searchBook(bookForLand)
 
         this.landedBooks.push(thisBookForLand)
         let index = this.libraryBooks.indexOf(thisBookForLand)
@@ -167,14 +181,24 @@ class Library {
 
     //update book..still not ready func
     updateBook(bookForUpdate) {
-
+        try {
+            this.searchBook(bookForUpdate)
+        } catch (err) {
+            console.log(err.name);
+            console.log(err.mesage);
+        }
         return this.searchBook(bookForUpdate)
 
     }
 
     //delete selected book from  this.libraryBooks[]
     deleteBook(bookForDelete) {
-
+        try {
+            this.searchBook(bookForUpdate)
+        } catch (err) {
+            console.log(err.name);
+            console.log(err.mesage);
+        }
         let thisBookForDelete = this.searchBook(bookForDelete)
         if (thisBookForDelete === undefined) {
             return undefined
@@ -277,6 +301,12 @@ class Librarian {
 
         let customerInOrder = this.getTheCustomerWhoseTurnCameFromTheQueue()
 
+        try {
+            this.getTheCustomerWhoseTurnCameFromTheQueue()
+        } catch {
+            console.log(err.name);
+            console.log(err.mesage);
+        }
         console.log(`Customer name: ${customerInOrder.name}`);
         let theBookTheCustomerWants = customerInOrder.pickARandomBook(books)
         console.log(`Customer book wich will borrow id: ${theBookTheCustomerWants.id} / Title: "${theBookTheCustomerWants.title}" / Author: ${theBookTheCustomerWants.author}`);
@@ -286,9 +316,6 @@ class Librarian {
             customerInOrder.trackBooksWchAreLoggedInBorrowedList(theBookTheCustomerWants)
 
         }
-        else {
-            throw Error('Library: The book you looking for is currently not available')
-        }
 
     }
 
@@ -296,14 +323,14 @@ class Librarian {
     finalFunction_ustomerServiceReturningABorrowedBook(customer) {
 
         if (customer.borrowedBooks.length === 0) {
-            throw Error('Customer: No more Books for return!')
+            console.log('Customer: No more Books for return!')
         } else {
             let bookToBeReturn = customer.borrowedBooks[0]
             console.log(`Customer name: ${customer.name} return borrowed book id: ${bookToBeReturn.id} / Title: "${bookToBeReturn.title}" / Athor: ${bookToBeReturn.author}`);
             this.workSpaceLibrary[0].returnBookInLibrary(bookToBeReturn)
             bookToBeReturn = customer.borrowedBooks.shift()
 
-            return 
+            return
         }
 
 
@@ -319,7 +346,7 @@ class Librarian {
             let bookToDonate = customer.donateBook()
             console.log(`Customer name: ${customer.name} donate book id: ${bookToDonate.id} / Title: "${bookToDonate.title}" / Athor: ${bookToDonate.author}`);
             this.workSpaceLibrary[0].acceptingADonatedBookFromACustomer(bookToDonate)
-          
+
         }
 
     }
@@ -380,112 +407,22 @@ librarian1.openTheLibraryEntranceForCustomers(user3)
 
 
 // get chosen book from customers / find this book in library and gave it to the customer
-let testFunction = function () {
-    for (let i = 1; i <= 10; i++) {
-        try {
 
-            console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
-            console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
-            console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
-            console.log(`${librarian1.finalFunction_ustomerServiceReturningABorrowedBook(user1)}`);
-            console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
-            console.log(`${librarian1.finalFunction_customerServiceDonationABook(user2)}`);
-            console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
-            console.log(`${librarian1.finalFunction_ustomerServiceReturningABorrowedBook(user2)}`);
-            console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
-            console.log(`${librarian1.finalFunction_customerServiceDonationABook(user3)}`);
-            console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
-            console.log(`${librarian1.finalFunction_ustomerServiceReturningABorrowedBook(user3)}`)
 
-        }
-        catch (err) {
-            console.log(err.name)
-            console.log(err.message);;
+console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
+console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
+console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
+console.log(`${librarian1.finalFunction_ustomerServiceReturningABorrowedBook(user1)}`);
+console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
+console.log(`${librarian1.finalFunction_customerServiceDonationABook(user2)}`);
+console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
+console.log(`${librarian1.finalFunction_ustomerServiceReturningABorrowedBook(user2)}`);
+console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
+console.log(`${librarian1.finalFunction_customerServiceDonationABook(user3)}`);
+console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
+console.log(`${librarian1.finalFunction_ustomerServiceReturningABorrowedBook(user3)}`)
 
-        }
-    }
-}
-testFunction()
+
 /* Outcome:
-Customer name: Pesho
-Customer book wich will borrow id: 6 / Title: " The Great Gatsby" / Author: F. Scott Fitzgerald
-BORROWED BOOKS LENGTS
-1
-undefined
-Customer name: Pesho
-Customer book wich will borrow id: 7 / Title: " Moby Dic" / Author: GF. Scott Fitzgerald
-BORROWED BOOKS LENGTS
-2
-undefined
-Customer name: Pesho
-Customer book wich will borrow id: 6 / Title: " The Great Gatsby" / Author: F. Scott Fitzgerald
-Error
-Oops..you already has this book, pick another one!
-Customer name: Pesho
-Customer book wich will borrow id: 13 / Title: "Diper Överlöde (Diary of a Wimpy Kid Book 17) " / Author: Jeff Kinney
-BORROWED BOOKS LENGTS
-3
-undefined
-Customer name: Pesho
-Customer book wich will borrow id: 6 / Title: " The Great Gatsby" / Author: F. Scott Fitzgerald
-Error
-Library: The book you looking for is currently not available
-Customer name: Gosho
-Customer book wich will borrow id: 11 / Title: "The Light We Carry: Overcoming in Uncertai " / Author: Michelle Obama
-BORROWED BOOKS LENGTS
-1
-undefined
-Customer name: Gosho
-Customer book wich will borrow id: 11 / Title: "The Light We Carry: Overcoming in Uncertai " / Author: Michelle Obama
-Error
-Oops..you already has this book, pick another one!
-Customer name: Gosho
-Customer book wich will borrow id: 2 / Title: "Harry Potter" / Author: J K. Rowling
-BORROWED BOOKS LENGTS
-2
-undefined
-Customer name: Gosho
-Customer book wich will borrow id: 9 / Title: " The Divine Comedy" / Author: Dante Alighieri
-BORROWED BOOKS LENGTS
-3
-undefined
-Customer name: Gosho
-Customer book wich will borrow id: 11 / Title: "The Light We Carry: Overcoming in Uncertai " / Author: Michelle Obama
-Error
-Library: The book you looking for is currently not available
-Customer name: Ivan
-Customer book wich will borrow id: 14 / Title: "November 9: A Novel " / Author: Colleen Hoover
-Error
-Oops..you already has this book, pick another one!
-Customer name: Ivan
-Customer book wich will borrow id: 13 / Title: "Diper Överlöde (Diary of a Wimpy Kid Book 17) " / Author: Jeff Kinney
-BORROWED BOOKS LENGTS
-1
-undefined
-Customer name: Ivan
-Customer book wich will borrow id: 13 / Title: "Diper Överlöde (Diary of a Wimpy Kid Book 17) " / Author: Jeff Kinney
-Error
-Oops..you already has this book, pick another one!
-Customer name: Ivan
-Customer book wich will borrow id: 13 / Title: "Diper Överlöde (Diary of a Wimpy Kid Book 17) " / Author: Jeff Kinney
-Error
-Oops..you already has this book, pick another one!
-Customer name: Ivan
-Customer book wich will borrow id: 7 / Title: " Moby Dic" / Author: GF. Scott Fitzgerald
-BORROWED BOOKS LENGTS
-2
-undefined
-Customer name: Ivan
-Customer book wich will borrow id: 1 / Title: "Everyday Italian" / Author: Giada De Laurentiis
-BORROWED BOOKS LENGTS
-3
-undefined
-Customer name: Ivan
-Customer book wich will borrow id: 4 / Title: "Don Quixote" / Author: Miguel de Cervantes
-Error
-Library: The book you looking for is currently not available
-Error
-No more customers in the queue
-Error
-No more customers in the queue
+
 */
