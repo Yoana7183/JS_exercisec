@@ -16,7 +16,6 @@ class User {
         this.borrowedBooks = []
     }
 
-
     //add books in this.listOfBooks[] / personal list/ doesnt depend on borrowedBooks[]//
     addBooksInmyListOfBooks(book) {
         this.listOfBooks.push(book)
@@ -47,7 +46,6 @@ class User {
     checkIfThatBookIsInMyBorrowedList(bookForCheck) {
 
         for (let i = 0; i < this.borrowedBooks.length; i++) {
-
             if (this.borrowedBooks[i].id === bookForCheck.id) {
                 return true
             }
@@ -57,13 +55,9 @@ class User {
 
     // select random book
     pickARandomBook(books) {
-
         let allBooks = books
         return allBooks[Math.floor(Math.random() * allBooks.length)]
-
     }
-
-
 
     //function which adds the given book after all checks
     borrowBook(bookToBorrow) {
@@ -74,30 +68,27 @@ class User {
         if (checkForThsBookInTheList || chekForTheBookInBorrowList) {
             throw Error('Oops..you already has this book, pick another one!')
         }
-
         if (this.borrowedBooks.length <= 2) {
-
-
             if (!checkForThsBookInTheList && !chekForTheBookInBorrowList) {
-                this.borrowedBooks.push(bookToBorrow)
-                console.log(`BORROWED BOOKS LENGTS`);
-                console.log(this.borrowedBooks.length);
+                console.log(bookToBorrow.id);
+                return this.borrowedBooks.push(bookToBorrow)
 
             }
         }
-
     }
+
     // helping function that serves to keep track of the books that are logged in and which are not logged in this.borrowedBooks[]
     trackBooksWchAreLoggedInBorrowedList(bookToBorrow) {
 
         let currentListLength = this.borrowedBooks.length
+
         try {
             this.borrowBook(bookToBorrow)
         } catch (err) {
             console.log(err.name);
-            console.log(err.mesage)
+            console.log(err.message)
+            throw 'The book cannot be borrowed'
         }
-        // this.borrowBook(bookToBorrow)
 
         let currentListLengthAfterRunBorrowFunc = this.borrowedBooks.length
 
@@ -115,7 +106,9 @@ class User {
         let borrowedBookForReturn = this.checkIfThatBookIsInMyBorrowedList(bookForReturn)
         if (borrowedBookForReturn) {
             let index = this.borrowedBooks.indexOf(borrowedBookForReturn)
-            this.borrowedBooks.splice(index, 1)
+            return this.borrowedBooks.splice(index, 1)
+        } else {
+            throw Error('The book is already in your Personal or Borrowed list. Please try with another book!')
         }
     }
 
@@ -285,8 +278,14 @@ class Librarian {
 
     // check if the customer is reach the limit of borrowed books and if is it then finish his/her service and invite the next customer
     checkIfCustomerIsReachBookLimit() {
-
+        try {
+            this.getTheCustomerWhoseTurnCameFromTheQueue()
+        } catch {
+            console.log(err.name);
+            console.log(err.mesage);
+        }
         let currentCustomerInOrder = this.getTheCustomerWhoseTurnCameFromTheQueue()
+
         if (currentCustomerInOrder.borrowedBooks.length <= 2) {
             return true
         } if (currentCustomerInOrder.borrowedBooks.length === 3) {
@@ -298,32 +297,45 @@ class Librarian {
     // On the user's side: it checks how many books he has so far and if he has not reached his limit or has not read or owned this book he gives it to him in the borrowedBooks[]
     //after that invites another customer of the queue
     finalFunction_customerServiceForBorrowingABookFromTheLiibrary() {
-
-        let customerInOrder = this.getTheCustomerWhoseTurnCameFromTheQueue()
-
         try {
             this.getTheCustomerWhoseTurnCameFromTheQueue()
         } catch {
             console.log(err.name);
             console.log(err.mesage);
         }
-        console.log(`Customer name: ${customerInOrder.name}`);
-        let theBookTheCustomerWants = customerInOrder.pickARandomBook(books)
-        console.log(`Customer book wich will borrow id: ${theBookTheCustomerWants.id} / Title: "${theBookTheCustomerWants.title}" / Author: ${theBookTheCustomerWants.author}`);
 
+        let customerInOrder = this.getTheCustomerWhoseTurnCameFromTheQueue()
+
+        let theBookTheCustomerWants = customerInOrder.pickARandomBook(books)
 
         if (this.checkIfCustomerIsReachBookLimit()) {
-            customerInOrder.trackBooksWchAreLoggedInBorrowedList(theBookTheCustomerWants)
+            try {
+                customerInOrder.trackBooksWchAreLoggedInBorrowedList(theBookTheCustomerWants)
+            } catch (err) {
+                console.log(err.name);
+                console.log(err.message);
 
+                return undefined
+            }
+            return [theBookTheCustomerWants, customerInOrder];
         }
 
     }
 
+    displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary() {
+
+        let bookAndCustomerObj = this.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
+        if (bookAndCustomerObj === undefined) {
+            console.log(`There is a problem, please connect to support`);
+            return
+        }
+        console.log(`Customer name: ${bookAndCustomerObj[1].name} / Wanted book wich will borrow id: ${bookAndCustomerObj[0].id} / Title: "${bookAndCustomerObj[0].title}" / Author: ${bookAndCustomerObj[0].author}`);
+    }
     // get customer first borrowed book in this.borrowedBooks[] , splice the book from this.borrowedBooks[] and add the book in this.libraryList[] from library
     finalFunction_ustomerServiceReturningABorrowedBook(customer) {
 
         if (customer.borrowedBooks.length === 0) {
-            console.log('Customer: No more Books for return!')
+            console.log(`Customer name: ${customer.name} has no more book for return`)
         } else {
             let bookToBeReturn = customer.borrowedBooks[0]
             console.log(`Customer name: ${customer.name} return borrowed book id: ${bookToBeReturn.id} / Title: "${bookToBeReturn.title}" / Athor: ${bookToBeReturn.author}`);
@@ -340,7 +352,7 @@ class Librarian {
     finalFunction_customerServiceDonationABook(customer) {
 
         if (customer.listOfBooks.length === 0) {
-            throw Error('Customer: No more Books for donation!')
+            console.log(`Customer name: ${customer.name} has no more book for donation`)
         }
         else {
             let bookToDonate = customer.donateBook()
@@ -409,18 +421,39 @@ librarian1.openTheLibraryEntranceForCustomers(user3)
 // get chosen book from customers / find this book in library and gave it to the customer
 
 
-console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
-console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
-console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
-console.log(`${librarian1.finalFunction_ustomerServiceReturningABorrowedBook(user1)}`);
-console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
-console.log(`${librarian1.finalFunction_customerServiceDonationABook(user2)}`);
-console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
-console.log(`${librarian1.finalFunction_ustomerServiceReturningABorrowedBook(user2)}`);
-console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
-console.log(`${librarian1.finalFunction_customerServiceDonationABook(user3)}`);
-console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
-console.log(`${librarian1.finalFunction_ustomerServiceReturningABorrowedBook(user3)}`)
+librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
+librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
+librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
+librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
+librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
+librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
+librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
+librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
+librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
+// console.log(`${librarian1.finalFunction_ustomerServiceReturningABorrowedBook(user1)}`);
+// console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
+// console.log(`${librarian1.finalFunction_customerServiceDonationABook(user3)}`);
+// console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
+// console.log(`${librarian1.finalFunction_ustomerServiceReturningABorrowedBook(user1)}`);
+// console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
+// console.log(`${librarian1.finalFunction_ustomerServiceReturningABorrowedBook(user1)}`);
+// console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
+// console.log(`${librarian1.finalFunction_customerServiceDonationABook(user3)}`);
+// console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
+// console.log(`${librarian1.finalFunction_customerServiceDonationABook(user2)}`);
+// console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
+// console.log(`${librarian1.finalFunction_customerServiceDonationABook(user2)}`);
+// console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
+// console.log(`${librarian1.finalFunction_ustomerServiceReturningABorrowedBook(user1)}`);
+// console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
+// console.log(`${librarian1.finalFunction_ustomerServiceReturningABorrowedBook(user2)}`);
+// console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
+// console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
+// console.log(`${librarian1.finalFunction_customerServiceDonationABook(user2)}`);
+// console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
+// console.log(`${librarian1.finalFunction_customerServiceDonationABook(user3)}`);
+// console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
+// console.log(`${librarian1.finalFunction_ustomerServiceReturningABorrowedBook(user3)}`)
 
 
 /* Outcome:
