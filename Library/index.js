@@ -9,6 +9,7 @@ class Book {
         this.price = price
     }
 }
+
 class User {
     constructor(name) {
         this.name = name
@@ -70,9 +71,7 @@ class User {
         }
         if (this.borrowedBooks.length <= 2) {
             if (!checkForThsBookInTheList && !chekForTheBookInBorrowList) {
-                console.log(bookToBorrow.id);
                 return this.borrowedBooks.push(bookToBorrow)
-
             }
         }
     }
@@ -87,7 +86,7 @@ class User {
         } catch (err) {
             console.log(err.name);
             console.log(err.message)
-            throw 'The book cannot be borrowed'
+            throw Error('The book cannot be borrowed. Please try with another book!')
         }
 
         let currentListLengthAfterRunBorrowFunc = this.borrowedBooks.length
@@ -142,9 +141,6 @@ class Library {
                 throw Error('Library: The book you looking for is currently not available')
             }
         }
-
-
-
     }
 
     //add book in library
@@ -154,7 +150,6 @@ class Library {
 
     // final function that takes the selected book out of the this.libraryBooks[] and moves it to the this.landedBooks[]
     lendBook(bookForLand) {
-
 
         try {
             this.searchBook(bookForLand)
@@ -181,7 +176,6 @@ class Library {
             console.log(err.mesage);
         }
         return this.searchBook(bookForUpdate)
-
     }
 
     //delete selected book from  this.libraryBooks[]
@@ -199,7 +193,6 @@ class Library {
         let index = this.libraryBooks.indexOf(thisBookForDelete)
         this.libraryBooks.splice(index, 1)
     }
-
 
     // write in json file the books data wich are in this.libraryBooks[]
     writeBooksInStockInJSONfile() {
@@ -271,13 +264,12 @@ class Librarian {
         if (this.customers.length === 0) {
             throw Error('No more customers in the queue');
         }
-
-
         return this.customers[0]
     }
 
     // check if the customer is reach the limit of borrowed books and if is it then finish his/her service and invite the next customer
     checkIfCustomerIsReachBookLimit() {
+
         try {
             this.getTheCustomerWhoseTurnCameFromTheQueue()
         } catch {
@@ -291,15 +283,17 @@ class Librarian {
         } if (currentCustomerInOrder.borrowedBooks.length === 3) {
             this.processedCustomer()
         }
+
     }
 
     //the final function Library side: which after all checks takes the book out of the libraryBooks[], puts it in the landedBooks[] of the library.
     // On the user's side: it checks how many books he has so far and if he has not reached his limit or has not read or owned this book he gives it to him in the borrowedBooks[]
     //after that invites another customer of the queue
     finalFunction_customerServiceForBorrowingABookFromTheLiibrary() {
+
         try {
             this.getTheCustomerWhoseTurnCameFromTheQueue()
-        } catch {
+        } catch(err) {
             console.log(err.name);
             console.log(err.mesage);
         }
@@ -326,41 +320,59 @@ class Librarian {
 
         let bookAndCustomerObj = this.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
         if (bookAndCustomerObj === undefined) {
-            console.log(`There is a problem, please connect to support`);
-            return
+            console.log(`This book is alreary in one of your lists. Please try with another one!`);
+
+        } else {
+            console.log(`Customer name: ${bookAndCustomerObj[1].name} / Wanted book = id: ${bookAndCustomerObj[0].id} / Title: "${bookAndCustomerObj[0].title}" / Author: ${bookAndCustomerObj[0].author}`);
         }
-        console.log(`Customer name: ${bookAndCustomerObj[1].name} / Wanted book wich will borrow id: ${bookAndCustomerObj[0].id} / Title: "${bookAndCustomerObj[0].title}" / Author: ${bookAndCustomerObj[0].author}`);
     }
     // get customer first borrowed book in this.borrowedBooks[] , splice the book from this.borrowedBooks[] and add the book in this.libraryList[] from library
-    finalFunction_ustomerServiceReturningABorrowedBook(customer) {
-
+    finalFunction_customerServiceReturningABorrowedBook(customer) {
+        let bookToBeReturn;
         if (customer.borrowedBooks.length === 0) {
-            console.log(`Customer name: ${customer.name} has no more book for return`)
+            return undefined
+
         } else {
-            let bookToBeReturn = customer.borrowedBooks[0]
-            console.log(`Customer name: ${customer.name} return borrowed book id: ${bookToBeReturn.id} / Title: "${bookToBeReturn.title}" / Athor: ${bookToBeReturn.author}`);
+            bookToBeReturn = customer.borrowedBooks[0]
             this.workSpaceLibrary[0].returnBookInLibrary(bookToBeReturn)
             bookToBeReturn = customer.borrowedBooks.shift()
-
-            return
+            return bookToBeReturn
         }
+    }
 
+    displayResultOf_finalFunction_customerServiceReturningABorrowedBook(customer) {
+        let bookToBeReturned = this.finalFunction_customerServiceReturningABorrowedBook(customer)
+        if (bookToBeReturned === undefined) {
+            console.log(`Customer name: ${customer.name} has no more book for return`)
 
+        } else {
+            console.log(`Customer name: ${customer.name} return borrowed book id: ${bookToBeReturned.id} / Title: "${bookToBeReturned.title}" / Athor: ${bookToBeReturned.author}`);
+
+        }
     }
 
     // get random book from customer listOfBooks[] and add it in library without any checks
     finalFunction_customerServiceDonationABook(customer) {
 
         if (customer.listOfBooks.length === 0) {
-            console.log(`Customer name: ${customer.name} has no more book for donation`)
+            return undefined
         }
         else {
             let bookToDonate = customer.donateBook()
-            console.log(`Customer name: ${customer.name} donate book id: ${bookToDonate.id} / Title: "${bookToDonate.title}" / Athor: ${bookToDonate.author}`);
             this.workSpaceLibrary[0].acceptingADonatedBookFromACustomer(bookToDonate)
-
+            return bookToDonate
         }
 
+    }
+
+    displayResultOf_finalFunction_customerServiceDonationABook(customer) {
+        let bookForDonation = this.finalFunction_customerServiceDonationABook(customer)
+        if(bookForDonation === undefined){
+            console.log(`Customer name: ${customer.name} has no more book for donation`)
+        }else{
+            console.log(`Customer name: ${customer.name} donate book id: ${bookForDonation.id} / Title: "${bookForDonation.title}" / Athor: ${bookForDonation.author}`);
+        }
+        
     }
 }
 
@@ -415,47 +427,71 @@ librarian1.openTheLibraryEntranceForCustomers(user1)
 librarian1.openTheLibraryEntranceForCustomers(user2)
 librarian1.openTheLibraryEntranceForCustomers(user3)
 
-//process customers in queue order
-
-
-// get chosen book from customers / find this book in library and gave it to the customer
-
-
+// My Print methoods: 
+librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
+librarian1.displayResultOf_finalFunction_customerServiceReturningABorrowedBook(user1)
+librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
+librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
+librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
+librarian1.displayResultOf_finalFunction_customerServiceReturningABorrowedBook(user1)
+librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
+librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
+librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
+librarian1.displayResultOf_finalFunction_customerServiceDonationABook(user1)
+librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
+librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
+librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
+librarian1.displayResultOf_finalFunction_customerServiceReturningABorrowedBook(user2)
+librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
+librarian1.displayResultOf_finalFunction_customerServiceDonationABook(user2)
+librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
+librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
+librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
+librarian1.displayResultOf_finalFunction_customerServiceDonationABook(user3)
 librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
 librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
 librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
 librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
-librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
-librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
-librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
-librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
-librarian1.displayResultOf_finalFunction_customerServiceForBorrowingABookFromTheLiibrary()
-// console.log(`${librarian1.finalFunction_ustomerServiceReturningABorrowedBook(user1)}`);
-// console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
-// console.log(`${librarian1.finalFunction_customerServiceDonationABook(user3)}`);
-// console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
-// console.log(`${librarian1.finalFunction_ustomerServiceReturningABorrowedBook(user1)}`);
-// console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
-// console.log(`${librarian1.finalFunction_ustomerServiceReturningABorrowedBook(user1)}`);
-// console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
-// console.log(`${librarian1.finalFunction_customerServiceDonationABook(user3)}`);
-// console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
-// console.log(`${librarian1.finalFunction_customerServiceDonationABook(user2)}`);
-// console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
-// console.log(`${librarian1.finalFunction_customerServiceDonationABook(user2)}`);
-// console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
-// console.log(`${librarian1.finalFunction_ustomerServiceReturningABorrowedBook(user1)}`);
-// console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
-// console.log(`${librarian1.finalFunction_ustomerServiceReturningABorrowedBook(user2)}`);
-// console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
-// console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
-// console.log(`${librarian1.finalFunction_customerServiceDonationABook(user2)}`);
-// console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
-// console.log(`${librarian1.finalFunction_customerServiceDonationABook(user3)}`);
-// console.log(`${librarian1.finalFunction_customerServiceForBorrowingABookFromTheLiibrary()}`);
-// console.log(`${librarian1.finalFunction_ustomerServiceReturningABorrowedBook(user3)}`)
+librarian1.displayResultOf_finalFunction_customerServiceDonationABook(user3)
 
 
 /* Outcome:
+Customer name: Pesho / Wanted book = id: 14 / Title: "November 9: A Novel " / Author: Colleen Hoover
+Customer name: Pesho return borrowed book id: 14 / Title: "November 9: A Novel " / Athor: Colleen Hoover
+Customer name: Pesho / Wanted book = id: 13 / Title: "Diper Överlöde (Diary of a Wimpy Kid Book 17) " / Author: Jeff Kinney
+Error
+Oops..you already has this book, pick another one!
+Error
+The book cannot be borrowed. Please try with another book!
+This book is alreary in one of your lists. Please try with another one!
+Customer name: Pesho / Wanted book = id: 11 / Title: "The Light We Carry: Overcoming in Uncertai " / Author: Michelle Obama
+Customer name: Pesho return borrowed book id: 13 / Title: "Diper Överlöde (Diary of a Wimpy Kid Book 17) " / Athor: Jeff Kinney
+Error
+Oops..you already has this book, pick another one!
+Error
+The book cannot be borrowed. Please try with another book!
+This book is alreary in one of your lists. Please try with another one!
+Error
+Oops..you already has this book, pick another one!
+Error
+The book cannot be borrowed. Please try with another book!
+This book is alreary in one of your lists. Please try with another one!
+Customer name: Pesho / Wanted book = id: 12 / Title: "It Starts with Us: A Novel (It Ends with Us) " / Author: Colleen Hoover
+Customer name: Pesho donate book id: 1 / Title: "Everyday Italian" / Athor: Giada De Laurentiis
+Customer name: Pesho / Wanted book = id: 5 / Title: "One Hundred Years of Solitude" / Author: Giada De Laurentiis
+This book is alreary in one of your lists. Please try with another one!
+Customer name: Gosho / Wanted book = id: 9 / Title: " The Divine Comedy" / Author: Dante Alighieri
+Customer name: Gosho return borrowed book id: 9 / Title: " The Divine Comedy" / Athor: Dante Alighieri
+Customer name: Gosho / Wanted book = id: 13 / Title: "Diper Överlöde (Diary of a Wimpy Kid Book 17) " / Author: Jeff Kinney
+Customer name: Gosho donate book id: 3 / Title: "In Search of Lost Time" / Athor:  Marcel Proust
+Customer name: Gosho / Wanted book = id: 12 / Title: "It Starts with Us: A Novel (It Ends with Us) " / Author: Colleen Hoover
+Customer name: Gosho / Wanted book = id: 11 / Title: "The Light We Carry: Overcoming in Uncertai " / Author: Michelle Obama
+This book is alreary in one of your lists. Please try with another one!
+Customer name: Ivan donate book id: 14 / Title: "Where the Crawdads Sing " / Athor: Delia Owens
+Customer name: Ivan / Wanted book = id: 5 / Title: "One Hundred Years of Solitude" / Author: Giada De Laurentiis
+Customer name: Ivan / Wanted book = id: 14 / Title: "November 9: A Novel " / Author: Colleen Hoover
+Customer name: Ivan / Wanted book = id: 11 / Title: "The Light We Carry: Overcoming in Uncertai " / Author: Michelle Obama
+This book is alreary in one of your lists. Please try with another one!
+Customer name: Ivan has no more book for donation
 
 */
