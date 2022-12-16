@@ -52,6 +52,9 @@ class Department {
     sumOfAllVacationDays() {
 
         let allStaffVacationDate = this.getAllStaffVacationDays()
+        if(allStaffVacationDate.length === 0){
+            throw Error (' There is no employee vacation days')
+        }
         let sumUp = 0
 
         for (let i = 0; i < allStaffVacationDate.length; i++) {
@@ -62,6 +65,9 @@ class Department {
     }
     // separate calc on manager tax 
     calculateManagerFee() {
+        if(this.manager === undefined){
+            throw Error ('There is no manager')
+        }
         let tax = 0
         if (this.manager.vacationDays === '20') {
             tax = (10 / 100) * this.manager.salary
@@ -78,7 +84,13 @@ class Department {
         let days = 0
         let tax = 0
         let departmentTax = 0
-        let managerTax = this.calculateManagerFee()
+        var managerTax ;
+        try {
+             managerTax = this.calculateManagerFee()
+        } catch (error) {
+            console.log(error.name);
+            console.log(error.message);
+        }
 
         for (let i = 0; i < employeeData.length; i++) {
             days = employeeData[i].vacationDays
@@ -202,8 +214,6 @@ company.addDepartment(department1)
 company.addDepartment(department2)
 company.addDepartment(department3)
 
-let testFunc = function (){
-    try{
 console.log(`Manager name : ${company.getManagerByDepartmentName('Marketing Department')}`);
 console.log(`After the audit, a total of days of  ${company.calculateTheSumOfVacationDaysForAllEmployeesInADepartment('Marketing Department')} have left to all employees in team`);
 console.log(`After the audit, a total of days of  ${company.calculateTheSumOfVacationDaysForAllEmployeesInADepartment('Technical Support Department')} have left to all employees in team`);
@@ -212,14 +222,7 @@ console.log(`The total amount of all taxes is:${company.calculateTheSumOfTheTaxe
 console.log(`The total amount of all taxes is:${company.calculateTheSumOfTheTaxesForAllEmployeeInADepartment('Sale Department')} `);
 console.log(`The total amount of all taxes is:${company.calculateTheSumOfTheTaxesForAllEmployeeInADepartment('Technical Support Department')} `);
 console.log(`Аll fees for the whole company are worth : ${company.calculateTheSumOfAllTaxesInCompany()} BGN`);
-    }
-    catch(err){
-        console.log(err.name)
-        console.log(err.message);
-    }
-  
-}
-testFunc()
+
 // Output in console:
 /*Manager name : Dragan Petkov
 After the audit, a total of days of  100 have left to all employees in his team
